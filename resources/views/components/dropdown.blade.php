@@ -1,35 +1,48 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-gray-700'])
+@props(['align' => 'left', 'width' => '2', 'gap' => 2])
 
 @php
-$alignmentClasses = match ($align) {
-    'left' => 'ltr:origin-top-left rtl:origin-top-right start-0',
-    'top' => 'origin-top',
-    default => 'ltr:origin-top-right rtl:origin-top-left end-0',
-};
+    $align = match ($align) {
+        'left' => 'left-0',
+        'right' => 'right-0',
+        default => 'left-0',
+    };
 
-$width = match ($width) {
-    '48' => 'w-48',
-    default => $width,
-};
+    $width = match ($width) {
+        '1' => 'w-48',
+        '2' => 'w-52',
+        '3' => 'w-56',
+        '4' => 'w-58',
+        default => 'w-48',
+    };
+
+    $gapClass = match ($gap) {
+        0 => 'data-[dropdown-position=bottom]:mt-0 data-[dropdown-position=top]:mb-0',
+        1 => 'data-[dropdown-position=bottom]:mt-1 data-[dropdown-position=top]:mb-1.5',
+        2 => 'data-[dropdown-position=bottom]:mt-2 data-[dropdown-position=top]:mb-2',
+        3 => 'data-[dropdown-position=bottom]:mt-2.5 data-[dropdown-position=top]:mb-2.5',
+        4 => 'data-[dropdown-position=bottom]:mt-3 data-[dropdown-position=top]:mb-3',
+        5 => 'data-[dropdown-position=bottom]:mt-3.5 data-[dropdown-position=top]:mb-3.5',
+        default => 'data-[dropdown-position=bottom]:mt-2 data-[dropdown-position=top]:mb-2',
+    };
+
+    $positionClasss = implode(' ', [
+        'data-[dropdown-position=bottom]:top-full data-[dropdown-position=bottom]:bottom-auto',
+        'data-[dropdown-position=top]:bottom-full data-[dropdown-position=top]:top-auto',
+        $gapClass,
+    ]);
 @endphp
 
-<div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
-    <div @click="open = ! open">
+<div class="relative" data-dropdown>
+    <!-- Trigger slot -->
+    <div data-dropdown-trigger>
         {{ $trigger }}
     </div>
 
-    <div x-show="open"
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-75"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
-            class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
-            style="display: none;"
-            @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">
-            {{ $content }}
+    <!-- Dropdown menu -->
+    <div tabindex="0" data-dropdown-menu
+        class="absolute {{ $align }} {{ $width }} focus:outline-none hidden px-0.5
+         py-1 text-sm bg-white shadow-md rounded-lg dark:bg-zinc-950 ring-1 ring-black/10 dark:ring-zinc-800 z-50 {{ $positionClasss }}">
+        <div data-dropdown-content class="p-0.5 relative custom-scrollbar scrollbar-extra-small">{{ $content }}
         </div>
     </div>
 </div>
