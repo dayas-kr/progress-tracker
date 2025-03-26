@@ -33,7 +33,7 @@ $directionClasses = match ($direction) {
     <input type="checkbox" id="{{ $id }}" name="{{ $name ?? '' }}" class="hidden peer"
         @disabled($disabled) @checked($checked) {{ $attributes->whereStartsWith('wire:model') }}>
 
-    <label tabindex="0" data-custom-input-label for="{{ $id }}"
+    <label tabindex="0" data-checkbox-label for="{{ $id }}"
         class="flex items-center space-x-2 select-none text-sm {{ $disabledLabelClasses }} dark:text-zinc-400 dark:peer-checked:text-zinc-300 peer-checked:text-zinc-800
                   [&_svg]:scale-0 peer-checked:[&_.custom-checkbox]:border-zinc-800 peer-checked:[&_.custom-checkbox]:bg-zinc-800 dark:peer-checked:[&_.custom-checkbox]:bg-white
                   peer-checked:[&_svg]:scale-100 {{ $disabledClasses }}
