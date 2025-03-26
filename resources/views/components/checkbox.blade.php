@@ -23,7 +23,7 @@ $disabledClasses = implode(' ', [
 $disabledLabelClasses = $disabled ? 'text-zinc-400 dark:text-zinc-600' : 'text-zinc-900 dark:text-zinc-50';
 @endphp
 
-<div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 data-[disabled=true]:[&>[data-slot=checkbox]]:opacity-50 data-[disabled=true]:[&>[data-slot=checkbox-description]]:opacity-50"
+<div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 data-[disabled=true]:[&>[data-main-checkbox-label]]:opacity-50 data-[disabled=true]:[&>[data-checkbox-description]]:opacity-50"
     data-custom-checkbox data-disabled={{ $disabled ? 'true' : 'false' }}>
     <input type="checkbox" id="{{ $id }}" name="{{ $name ?? '' }}" class="hidden peer"
         @disabled($disabled) @checked($checked) {{ $attributes->whereStartsWith('wire:model') }}>
@@ -31,7 +31,7 @@ $disabledLabelClasses = $disabled ? 'text-zinc-400 dark:text-zinc-600' : 'text-z
     <label tabindex="0" data-checkbox-label for="{{ $id }}"
         class="{{ $disabledLabelClasses }} dark:text-zinc-400 dark:peer-checked:text-zinc-300 peer-checked:text-zinc-800
                   [&_svg]:scale-0 peer-checked:[&_.custom-checkbox]:border-zinc-800 dark:peer-checked:[&_.custom-checkbox]:border-white peer-checked:[&_.custom-checkbox]:bg-zinc-800 dark:peer-checked:[&_.custom-checkbox]:bg-white
-                  peer-checked:[&_svg]:scale-100 {{ $disabledClasses }}
+                  peer-checked:[&_svg]:scale-100 {{ $disabledClasses }} peer-disabled:focus-visible:[&_.custom-checkbox]:ring-0 peer-disabled:focus-visible:[&_.custom-checkbox]:ring-offset-0
                   focus-visible:outline-0 focus-visible:ring-none focus-visible:[&_.custom-checkbox]:ring-2 focus-visible:[&_.custom-checkbox]:ring-blue-500
                   focus-visible:[&_.custom-checkbox]:ring-offset-2 dark:focus-visible:[&_.custom-checkbox]:ring-offset-zinc-900">
         <span
@@ -44,11 +44,12 @@ $disabledLabelClasses = $disabled ? 'text-zinc-400 dark:text-zinc-600' : 'text-z
         </span>
     </label>
     @if ($label)
-        <label for="{{ $id }}" data-slot="checkbox"
-            class="text-[13px] col-start-2 select-none font-medium text-zinc-800 dark:text-white">{{ $label }}</label>
+        <x-label data-main-checkbox-label for="{{ $id }}"
+            class="col-start-2 select-none">{{ $label }}</x-label>
     @endif
     @if ($description)
-        <p data-slot="checkbox-description" class="text-sm col-start-2 select-none text-zinc-500 dark:text-white/60">
-            {{ $description }}</p>
+        {{-- <p data-slot="checkbox-description" class="text-sm col-start-2 select-none text-zinc-500 dark:text-white/60">
+            {{ $description }}</p> --}}
+        <x-description data-checkbox-description class="col-start-2 select-none">{{ $description }}</x-description>
     @endif
 </div>
