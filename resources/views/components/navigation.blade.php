@@ -21,6 +21,12 @@
                             'mobileOnly' => false,
                         ],
                         [
+                            'text' => 'Playlists',
+                            'href' => route('playlists.index'),
+                            'active' => 'playlists.index',
+                            'mobileOnly' => false,
+                        ],
+                        [
                             'text' => 'Account Settings',
                             'href' => route('profile.edit'),
                             'active' => 'profile.edit',
