@@ -5,6 +5,7 @@ window.Alpine = Alpine;
 Alpine.start();
 
 // UI Components
+import "./ui/navbar";
 import { initCustomInputs } from "./ui/customInput";
 import { initDropdowns } from "./ui/dropdown";
 import { initSelects } from "./ui/select";
