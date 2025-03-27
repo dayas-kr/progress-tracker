@@ -35,3 +35,25 @@
         border-color: var(--color-gray-200, currentColor);
     }
 }
+
+/* custom alert (start) */
+.alert-base {
+    @apply w-full max-w-2xl py-3.5 px-5 bg-white dark:bg-black rounded-lg border border-zinc-200 dark:border-zinc-800 flex gap-3 [&_svg]:h-5 [&_svg]:w-5 [&_svg]:text-zinc-500 [&_svg]:dark:text-zinc-400 [&_span]:text-sm [&_span]:text-zinc-800 [&_span]:dark:text-zinc-200 [&_span]:inline-block;
+}
+
+.alert-base.alert-success {
+    @apply bg-green-50 dark:bg-[#020D06] border-green-200 dark:border-green-800/30 [&_span]:text-green-800 [&_span]:dark:text-green-200 [&_svg]:text-green-500 [&_svg]:dark:text-green-400 [&_h3]:text-green-800 [&_h3]:dark:text-green-200 [&_p]:text-green-900 [&_p]:dark:text-green-200;
+}
+
+.alert-base.alert-error {
+    @apply bg-red-50 dark:bg-[#190404] border-red-200 dark:border-red-800/30 [&_span]:text-red-800 [&_span]:dark:text-red-200 [&_svg]:text-red-500 [&_svg]:dark:text-red-400 [&_h3]:text-red-800 [&_h3]:dark:text-red-200 [&_p]:text-red-800 [&_p]:dark:text-red-200;
+}
+
+.alert-base.alert-warning {
+    @apply bg-yellow-50 dark:bg-[#22150B] border-yellow-200 dark:border-yellow-800/30 [&_span]:text-yellow-800 [&_span]:dark:text-yellow-200 [&_svg]:text-yellow-500 [&_svg]:dark:text-yellow-400 [&_h3]:text-yellow-800 [&_h3]:dark:text-yellow-200 [&_p]:text-yellow-800 [&_p]:dark:text-yellow-200;
+}
+
+.alert-base.alert-info {
+    @apply bg-blue-50 dark:bg-[#04081C] border-blue-200 dark:border-blue-800/30 [&_span]:text-blue-800 [&_span]:dark:text-blue-200 [&_svg]:text-blue-500 [&_svg]:dark:text-blue-400 [&_h3]:text-blue-800 [&_h3]:dark:text-blue-200 [&_p]:text-blue-800 [&_p]:dark:text-blue-200;
+}
+/* custom alert (end) */
