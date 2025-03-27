@@ -1,4 +1,4 @@
-@props(['radius' => 'large'])
+@props(['radius' => 'medium'])
 
 @php
     $radiusValue = match ($radius) {
