@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\FetchPlaylistController;
 use App\Http\Controllers\StorePlaylistController;
-use App\Http\Controllers\VideoController;
+use App\Http\Controllers\FetchPlaylistVideoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,11 +26,13 @@ Route::middleware('auth')->group(function () {
     // Playlists API Routes
     Route::get('/api/playlists', FetchPlaylistController::class);
     Route::post('/api/playlists', StorePlaylistController::class)->name('playlists.store');
+    Route::get('/api/videos', FetchPlaylistVideoController::class);
 
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
     Route::get('/playlist', [PlaylistController::class, 'show'])->name('playlists.show');
     Route::get('/watch', [VideoController::class, 'show'])->name('videos.show');
+    Route::delete('/playlist/{playlist:playlist_id}', [PlaylistController::class, 'destroy'])->name('playlists.destroy');
 });
 
 require __DIR__ . '/auth.php';

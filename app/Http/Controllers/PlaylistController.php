@@ -22,11 +22,23 @@ class PlaylistController extends Controller
     {
         $playlist = Playlist::where('playlist_id', $request->input('list'))->first() ?? [];
 
-        $videos = $playlist->videos;
+        if (!$playlist) return abort(404);
+
+        $videos = $playlist->videos()->paginate(10);
 
         $positionWidth = $this->getPositionWidth($playlist->video_count);
 
         return view('playlists.show', compact('playlist', 'videos', 'positionWidth'));
+    }
+
+    public function destroy(Playlist $playlist)
+    {
+        $playlist->delete(); // Delete the playlist from the database
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Playlist deleted successfully'
+        ]);
     }
 
     /**

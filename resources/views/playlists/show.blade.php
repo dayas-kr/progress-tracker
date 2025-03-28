@@ -1,7 +1,7 @@
-<x-base-layout>
+<x-base-layout title="{{ $playlist->title }} - Progress Tracker">
     <div class="min-h-screen pt-14 dark:bg-zinc-950 bg-white">
         <header
-            class="bg-white z-[100] flex items-center fixed top-0 right-0 left-0 justify-between dark:bg-zinc-950 border-b dark:border-zinc-800 py-3 sm:px-5 px-4 h-14">
+            class="bg-white z-10 flex items-center fixed top-0 right-0 left-0 justify-between dark:bg-zinc-950 border-b dark:border-zinc-800 py-3 sm:px-5 px-4 h-14">
             <a href="{{ route('playlists.index') }}"
                 class="size-10 md:hidden dark:active:bg-zinc-900 dark:hover:bg-zinc-800 dark:text-zinc-300 active:bg-zinc-100 flex items-center justify-center rounded-full">
                 <x-gmdi-arrow-back class="size-6" />
@@ -106,11 +106,10 @@
                                             ...more
                                         </div>
                                     </div>
-                                @else
-                                    <div class="text-sm w-full max-w-2xs">{{ $playlist->description }}</div>
                                 @endif
                             </div>
                         @endif
+
                         <div class="flex justify-between gap-3">
                             <x-button radius="full" class="font-semibold w-full h-9">
                                 <x-gmdi-play-arrow class="size-6 me-0.5" /><span>Play All</span>
@@ -181,18 +180,19 @@
             </div>
 
             <!-- Playlist Videos Container -->
-            <div id="playlist-videos-container"
+            <div id="playlist-videos-container" data-video-count="{{ $playlist->video_count }}"
                 class="py-3 yt-lg:pr-5 yt-lg:py-0 yt-lg:h-[calc(100vh-(56px+32px))] custom-scrollbar dark:text-zinc-300 yt-lg:shadow-2xs yt-lg:rounded-lg flex-1 yt-lg:overflow-y-auto">
-                <div id="playlist-videos" data-videos-loaded="{{ $playlist->video_count > 10 ? 'false' : 'true' }}"
+                <div id="playlist-videos" data-playlist-id="{{ $playlist->playlist_id }}"
+                    data-videos-loaded="{{ $playlist->video_count > 10 ? 'false' : 'true' }}"
                     class="max-w-4xl mx-auto yt-lg:max-w-full">
-                    @foreach ($playlist->videos as $video)
-                        @include('playlists.video-card', [
-                            'video' => $video,
-                            'positionWidth' => $positionWidth,
-                        ])
-                    @endforeach
+
+                    @include('playlists.video-card', [
+                        'video' => $videos,
+                        'positionWidth' => $positionWidth,
+                    ])
+
                 </div>
-                <div class="p-2 flex justify-center" id="playlist-videos-loader" style="display: none;">
+                <div class="p-2 flex justify-center" id="playlist-loading-spinner" style="display: none;">
                     <svg class="text-zinc-300 dark:text-zinc-600 animate-spin" viewBox="0 0 64 64" fill="none"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24">
                         <path
@@ -210,4 +210,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Alert Dialog for Delete -->
+    <div id="delete-playlist-dialog" data-dialog-backdrop
+        class="fixed inset-0 bg-zinc-900/50 dark:bg-black/60 z-[1000] flex items-center justify-center px-5 sm:px-0"
+        style="display: none;">
+        <div data-dialog-content
+            class="w-full max-w-lg p-6 border border-white dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-xl"
+            aria-modal="true" tabindex="0">
+            <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">Delete playlist</h3>
+            <p class="mt-2 text-sm text-zinc-800 dark:text-zinc-200">
+                Are you sure? This will permanently delete the playlist and its contents. This action cannot be undone.
+            </p>
+            <div class="mt-4 flex justify-end gap-2">
+                <x-button data-dialog-cancel class="w-fit" variant="secondary">Cancel</x-button>
+                <x-button data-dialog-confirm id="delete-playlist-confirm"
+                    data-playlist-id="{{ $playlist->playlist_id }}" variant="destructive"
+                    class="w-fit">Delete</x-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-container" class="fixed top-4 right-4 space-y-2 min-w-xl z-50"></div>
+
+    <x-slot name="script">
+        @vite('resources/js/playlists/show.js')
+    </x-slot>
 </x-base-layout>
