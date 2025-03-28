@@ -81,4 +81,11 @@
             <!-- Pagination -->
             {{ $playlists->links() }}
         </div>
+    </div>
+
+    <div id="alert-container" class="fixed top-4 right-4 space-y-2 min-w-xl z-50"></div>
+
+    <x-slot name="script">
+        @vite('resources/js/playlists/index.js')
+    </x-slot>
 </x-base-layout>
