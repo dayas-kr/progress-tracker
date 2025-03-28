@@ -36,7 +36,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="antialiased font-gist bg-zinc-100 dark:bg-zinc-950">
+<body class="antialiased font-gist bg-zinc-100 dark:bg-zinc-950 custom-scrollbar">
     <div class="min-h-screen bg-zinc-50 dark:bg-black">
         <!-- Page Content -->
         <main>

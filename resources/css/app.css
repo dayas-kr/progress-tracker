@@ -16,6 +16,13 @@
         "Noto Color Emoji";
 
     --spacing-10: 2.5rem;
+
+    /* Breakpoints */
+    --breakpoint-yt-xl: 1705px;
+    --breakpoint-yt-lg: 1080px;
+    --breakpoint-yt-md: 1024px;
+    --breakpoint-yt-sm: 972px;
+    --breakpoint-yt-xs: 840px;
 }
 
 /*
@@ -35,6 +42,21 @@
         border-color: var(--color-gray-200, currentColor);
     }
 }
+
+/* custom scrollbar (start) */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-zinc-500 dark:bg-zinc-400 rounded-full;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-600 dark:bg-zinc-300;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    @apply size-2;
+}
+.custom-scrollbar.scrollbar-extra-small::-webkit-scrollbar {
+    @apply size-2;
+}
+/* custom scrollbar (end) */
 
 /* custom alert (start) */
 .alert-base {
