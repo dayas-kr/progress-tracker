@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\FetchPlaylistController;
+use App\Http\Controllers\StorePlaylistController;
+use App\Http\Controllers\VideoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,7 +22,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::resource('playlists', PlaylistController::class)->only('index');
+    // Playlists API Routes
+    Route::get('/api/playlists', FetchPlaylistController::class);
+    Route::post('/api/playlists', StorePlaylistController::class)->name('playlists.store');
+
+    // Playlists Routes
+    Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
+    Route::get('/playlist', [PlaylistController::class, 'show'])->name('playlists.show');
+    Route::get('/watch', [VideoController::class, 'show'])->name('videos.show');
 });
 
 require __DIR__ . '/auth.php';

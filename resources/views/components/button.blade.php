@@ -114,14 +114,6 @@
         default => 'gap-1.5',
     };
 
-    $svgSizeClasses = match ($sizeValue) {
-        'small' => '[&_svg]:size-3.5',
-        'medium' => '[&_svg]:size-4.5',
-        'large' => '[&_svg]:size-5',
-        'extra-large' => '[&_svg]:size-6',
-        default => '[&_svg]:size-4.5',
-    };
-
     // Focus styles
     $focusClasses = implode(' ', [
         'focus-visible:outline-hidden',
@@ -143,7 +135,6 @@
         $icon ? $iconClasses : $sizeClasses,
         $focusClasses,
         $disabledClasses,
-        $svgSizeClasses,
         $gapClasses,
         'font-medium cursor-pointer text-nowrap',
         'flex items-center justify-center',
