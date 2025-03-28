@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
-class FetchPlaylistController extends Controller
+class FetchPlaylistInfoController extends Controller
 {
     /**
      * Handle the incoming request.
