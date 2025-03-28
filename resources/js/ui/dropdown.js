@@ -169,6 +169,8 @@ export function initDropdowns(root = document) {
                         detail: { value: item.dataset.value },
                     })
                 );
+                // Close the dropdown after clicking an item
+                closeDropdown();
             });
         });
 
@@ -218,6 +220,7 @@ export function initDropdowns(root = document) {
             } else if (e.key === "Enter") {
                 if (activeElement) {
                     activeElement.click();
+                    closeDropdown(); // Close the dropdown after the selection
                 }
                 e.preventDefault();
             } else {
