@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
 
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
+    Route::get('/playlist', [PlaylistController::class, 'show'])->name('playlists.show');
 });
 
 require __DIR__ . '/auth.php';
