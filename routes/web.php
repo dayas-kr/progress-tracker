@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/playlists', StorePlaylistController::class)->name('playlists.store');
 
     // Playlists Routes
-    Route::resource('/playlists', PlaylistController::class)->only('create');
+    Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
 });
 
 require __DIR__ . '/auth.php';
