@@ -8,6 +8,13 @@ class Playlist extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'video_count' => 'integer',
+        'subscriber_count' => 'integer',
+        'images' => 'array',
+        'channel_images' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
