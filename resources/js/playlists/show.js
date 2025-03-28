@@ -7,7 +7,6 @@ const playlistVideoContainer = $("#playlist-videos");
 const playlistVideosWrapper = $("#playlist-videos-container");
 const totalVideoCount = playlistVideosWrapper.attr("data-video-count");
 const playlistId = playlistVideoContainer.attr("data-playlist-id");
-const deletePlaylistBtn = $("#delete-playlist-confirm");
 const alertContainer = $("#alert-container");
 
 let currentPage = 1;
@@ -17,12 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     handleRedirectMessage();
 
     listenForScrollEnd();
-
-    deletePlaylistBtn.on("click", () => {
-        deletePlaylist(playlistId);
-    });
 });
-// delete-playlist-confirm
 
 // functioon for infinite scroll
 function listenForScrollEnd() {
@@ -43,6 +37,7 @@ function listenForScrollEnd() {
             data: {
                 playlist_id: playlistId,
                 page: currentPage,
+                _token: csrfToken,
             },
             beforeSend: function () {
                 // Show the loading spinner
@@ -96,27 +91,6 @@ function listenForScrollEnd() {
 
     // Attach the scroll event listener to the chosen scroll element
     scrollElement.on("scroll", listenForScrollEnd);
-}
-
-// delete playlist
-function deletePlaylist(playlistId) {
-    $.ajax({
-        url: "/playlist/" + playlistId, // Send the request to the correct URL
-        type: "DELETE",
-        data: {
-            _token: csrfToken,
-        },
-        success: function (response) {
-            if (response.success) {
-                redirectToPlaylistIndexPage(response.message);
-            } else {
-                showDefaultErrorAlert();
-            }
-        },
-        error: function (response) {
-            showDefaultErrorAlert();
-        },
-    });
 }
 
 function redirectToPlaylistIndexPage(message) {
