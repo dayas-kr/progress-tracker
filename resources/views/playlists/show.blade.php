@@ -13,8 +13,11 @@
             </x-button>
 
             <div class="relative hidden md:block md:max-w-md lg:max-w-lg w-full z-10">
-                <x-input size="small" autocomplete="off" icon id="search" :prefixStyling="false" prefix='gmdi-search'
-                    placeholder="Search Videos" class="w-full bg-white dark:bg-transparent" />
+                <x-input-group class="max-w-lg w-full">
+                    <x-gmdi-search data-slot="icon" />
+                    <x-input size="small" autocomplete="off" icon id="search" :prefixStyling="false"
+                        prefix='gmdi-search' placeholder="Search Videos" class="w-full bg-white dark:bg-transparent" />
+                </x-input-group>
             </div>
 
             <div class="flex items-center justify-between gap-1 sm:gap-4">
@@ -230,6 +233,26 @@
             </div>
         </div>
     </div>
+
+    <!-- Dialog for Playlist Description -->
+    @if ($playlist->description && strlen($playlist->description) > 52)
+        <div id="description-dialog" data-dialog-backdrop
+            class="fixed inset-0 bg-zinc-900/50 dark:bg-black/60 z-[1000] flex items-center justify-center px-5 sm:px-0"
+            style="display: none;">
+            <div data-dialog-content
+                class="w-full max-w-lg p-6 pt-4 border border-white dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-xl"
+                aria-modal="true" tabindex="0">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">Description</h3>
+                    <button data-dialog-cancel
+                        class="size-10 cursor-pointer hover:text-zinc-800 dark:hover:text-zinc-300 -mr-3 -mt-0.5 text-zinc-500 hover:bg-zinc-100 hover:dark:bg-zinc-800 flex items-center justify-center rounded-full focus:outline-none">
+                        <x-gmdi-close class="size-6" />
+                    </button>
+                </div>
+                <p class="mt-2 text-sm/7 text-zinc-800 dark:text-zinc-200">{{ $playlist->description }}</p>
+            </div>
+        </div>
+    @endif
 
     <div id="alert-container" class="fixed top-4 right-4 space-y-2 min-w-xl z-50"></div>
 

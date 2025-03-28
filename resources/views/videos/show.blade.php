@@ -15,8 +15,11 @@
             </x-button>
 
             <div class="relative hidden md:block md:max-w-md lg:max-w-lg w-full z-10">
-                <x-input size="small" autocomplete="off" icon id="search" :prefixStyling="false" prefix='gmdi-search'
-                    placeholder="Search Videos" class="w-full bg-white dark:bg-transparent" />
+                <x-input-group class="max-w-lg w-full">
+                    <x-gmdi-search data-slot="icon" />
+                    <x-input size="small" autocomplete="off" icon id="search" :prefixStyling="false"
+                        prefix='gmdi-search' placeholder="Search Videos" class="w-full bg-white dark:bg-transparent" />
+                </x-input-group>
             </div>
 
             <div class="flex items-center justify-between gap-1 sm:gap-4">
@@ -124,7 +127,7 @@
                     class="lg:max-w-[400px] w-full border dark:border-zinc-700 rounded-xl flex flex-col h-fit max-h-[50vh] sm:max-h-[calc(100vh-(56px+40px))] overflow-hidden">
                     <!-- Playlist Video Header -->
                     <div class="h-16 bg-white dark:bg-zinc-900 py-2 pl-6 pr-2.5">
-                        <a href="{{ route('playlists.show', $playlist->playlist_id) }}"
+                        <a href="{{ env('APP_URL') }}/playlist?list={{ $playlist->playlist_id }}"
                             class="block text-lg font-bold pr-2.5 text-zinc-800 dark:text-zinc-50 truncate">
                             {{ $playlist->title }}
                         </a>
