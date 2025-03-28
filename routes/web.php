@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\FetchPlaylistController;
 use App\Http\Controllers\StorePlaylistController;
+use App\Http\Controllers\VideoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
     Route::get('/playlist', [PlaylistController::class, 'show'])->name('playlists.show');
+    Route::get('/watch', [VideoController::class, 'show'])->name('videos.show');
 });
 
 require __DIR__ . '/auth.php';
