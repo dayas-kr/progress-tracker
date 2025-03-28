@@ -1,5 +1,6 @@
 import $ from "jquery";
 import createAlert from "../ui/alert";
+import { getItemWithExpiration, deleteSessionItem } from "../utils/session";
 
 const alertContainer = $("#alert-container");
 
@@ -8,15 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function handleRedirectMessage() {
-    const message = new URLSearchParams(window.location.search).get("message");
+    const message = getItemWithExpiration("playlistMessage_index");
     if (message) {
         alertContainer.append(
             createAlert({
                 type: "success",
-                message: decodeURIComponent(message),
+                message: message,
                 timeout: 5000,
             })
         );
-        history.replaceState({}, "", window.location.pathname);
+        deleteSessionItem("playlistMessage_index");
     }
 }

@@ -1,6 +1,11 @@
 import $ from "jquery";
 import { initDropdowns } from "../ui/dropdown";
 import createAlert from "../ui/alert";
+import {
+    setItemWithExpiration,
+    getItemWithExpiration,
+    deleteSessionItem,
+} from "../utils/session";
 
 const csrfToken = $('meta[name="csrf-token"]').attr("content");
 const playlistVideoContainer = $("#playlist-videos");
@@ -109,7 +114,7 @@ function deletePlaylist(playlistId) {
         },
         success: function (response) {
             if (response.success) {
-                redirectToPlaylistIndexPage(response.message);
+                redirectToIndexPage(response.message);
             } else {
                 showDefaultErrorAlert();
             }
@@ -118,13 +123,6 @@ function deletePlaylist(playlistId) {
             showDefaultErrorAlert();
         },
     });
-}
-
-function redirectToPlaylistIndexPage(message) {
-    const url = new URL(`${window.location.origin}/playlists`);
-    url.searchParams.set("message", encodeURIComponent(message));
-
-    window.location.href = url.toString();
 }
 
 function showDefaultErrorAlert(title, message) {
@@ -139,15 +137,20 @@ function showDefaultErrorAlert(title, message) {
 }
 
 function handleRedirectMessage() {
-    const message = new URLSearchParams(window.location.search).get("message");
+    const message = getItemWithExpiration("playlistMessage_show");
     if (message) {
         alertContainer.append(
             createAlert({
                 type: "success",
-                message: decodeURIComponent(message),
+                message: message,
                 timeout: 5000,
             })
         );
-        history.replaceState({}, "", window.location.pathname);
+        deleteSessionItem("playlistMessage_show");
     }
+}
+
+function redirectToIndexPage(message) {
+    setItemWithExpiration("playlistMessage_index", message, 15);
+    window.location.href = `${window.location.origin}/playlists`;
 }

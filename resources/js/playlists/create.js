@@ -1,5 +1,6 @@
 import $ from "jquery";
 import createAlert from "../ui/alert";
+import { setItemWithExpiration } from "../utils/session";
 
 const button = $("[data-submit-button]");
 const submitBtnSpinner = button.find($("[data-loading-spinner]"));
@@ -218,9 +219,6 @@ function showDefaultErrorAlert() {
 }
 
 function redirectToPlaylistPage(playlistId, message) {
-    const url = new URL(`${window.location.origin}/playlist`);
-    url.searchParams.set("list", playlistId);
-    url.searchParams.set("message", encodeURIComponent(message));
-
-    window.location.href = url.toString();
+    setItemWithExpiration("playlistMessage_show", message, 15);
+    window.location.href = `${window.location.origin}/playlist?list=${playlistId}`;
 }
