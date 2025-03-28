@@ -24,9 +24,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     // Playlists API Routes
-    Route::get('/api/playlists', FetchPlaylistController::class);
-    Route::post('/api/playlists', StorePlaylistController::class)->name('playlists.store');
-    Route::get('/api/videos', FetchPlaylistVideoController::class);
+    Route::get('/api/playlists/info', FetchPlaylistController::class);
+    Route::get('/api/playlist-videos', FetchPlaylistVideoController::class);
+    Route::post('/api/playlists', StorePlaylistController::class);
 
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');

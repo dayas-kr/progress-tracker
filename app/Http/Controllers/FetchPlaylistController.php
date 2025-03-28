@@ -14,7 +14,7 @@ class FetchPlaylistController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $playlist_id = $request->input('playlist_id');
+        $playlist_id = $request->input('list');
 
         if (!$playlist_id) {
             return response()->json(['error' => 'Playlist ID is required'], 400);

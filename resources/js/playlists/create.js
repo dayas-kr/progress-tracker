@@ -44,9 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
 // Fetch playlist
 function fetchPlaylist(playlistID, csrfToken) {
     $.ajax({
-        url: `/api/playlists`,
+        url: `/api/playlists/info`,
         type: "GET",
-        data: { _token: csrfToken, playlist_id: playlistID },
+        data: { _token: csrfToken, list: playlistID },
         beforeSend: () => {
             playlistInfoSkeleton.removeClass("hidden");
             resetFormBtn.removeClass("hidden");
