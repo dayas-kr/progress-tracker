@@ -32,6 +32,8 @@ return new class extends Migration
             $table->integer('average_duration')->nullable(); // In seconds
             $table->integer('progress')->default(0);
             $table->boolean('watched')->default(false);
+
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
     }
 
