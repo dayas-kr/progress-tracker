@@ -143,6 +143,18 @@ document.addEventListener("DOMContentLoaded", () => {
             },
         });
     }
+
+    // Mark video as completed
+    $("#mark-video-as-completed").on("click", function () {
+        const data = { _token: csrfToken, v: videoId, completed: 1 };
+        markVideoAsCompleted(data, $(this));
+    });
+
+    // Mark video as uncompleted
+    $("#reset-video-progress").on("click", function () {
+        const data = { _token: csrfToken, v: videoId, completed: 0 };
+        markVideoAsUncompleted(data, $(this));
+    });
 });
 
 // helper functions
@@ -152,4 +164,72 @@ function adjustPlayerSize(player) {
         const height = (width * 9) / 16;
         player.style.height = `${height}px`;
     }
+}
+
+function markVideoAsCompleted(data, button) {
+    const faCircleCheckIcon = button.find(".fa-regular.fa-circle-check");
+    const faSpinner = button.find(".fa-spinner");
+
+    $.ajax({
+        url: "/api/toggle-video-completion",
+        method: "POST",
+        data: data,
+        beforeSend: () => {
+            faCircleCheckIcon.hide();
+            faSpinner.show();
+        },
+        success: (response) => {
+            faSpinner.hide();
+            if (response.success) {
+                button.find(".fa-solid.fa-circle-check").show();
+                button.prop("disabled", true);
+                button.attr("data-completed", "true");
+                $("#reset-video-progress").removeClass("hidden");
+            } else {
+                faCircleCheckIcon.show();
+            }
+        },
+        error: (error) => {
+            faSpinner.hide();
+            faCircleCheckIcon.show();
+        },
+    });
+}
+
+function markVideoAsUncompleted(data, button) {
+    const faXmarkIcon = button.find(".fa-circle-xmark");
+    const faSpinner = button.find(".fa-spinner");
+    const markCompletedButton = $("#mark-video-as-completed");
+    const faSolidCheck = markCompletedButton.find(".fa-solid.fa-circle-check");
+    const faRegularCheck = markCompletedButton.find(
+        ".fa-regular.fa-circle-check"
+    );
+
+    $.ajax({
+        url: "/api/toggle-video-completion",
+        method: "POST",
+        data: data,
+        beforeSend: () => {
+            faXmarkIcon.hide();
+            faSpinner.show();
+        },
+        success: (response) => {
+            faSpinner.hide();
+            if (response.success) {
+                button.addClass("hidden");
+                faXmarkIcon.show();
+                markCompletedButton
+                    .prop("disabled", false)
+                    .prop("data-completed", false);
+                faSolidCheck.hide();
+                faRegularCheck.show();
+            } else {
+                faXmarkIcon.show();
+            }
+        },
+        error: () => {
+            faSpinner.hide();
+            faXmarkIcon.show();
+        },
+    });
 }

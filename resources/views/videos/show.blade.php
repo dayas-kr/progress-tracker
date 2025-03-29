@@ -87,7 +87,7 @@
                             <!-- Video Title -->
                             {{ $video->title }}
                         </div>
-                        <div class="flex justify-between items-center">
+                        <div class="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
                             <div class="flex gap-3 items-center">
                                 <div class="size-10 rounded-full overflow-hidden bg-zinc-200 dark:bg-zinc-800">
                                     <!-- Channel Thumbnail -->
@@ -108,16 +108,23 @@
 
                             <div class="flex gap-2.5">
                                 <x-switch id="auto-play-switch" label="Auto Play" />
-                                <x-button radius="full" variant="outline">
-                                    {{-- <i class="fa-solid animate-spin fa-spinner text-[1.005rem]"></i> --}}
+
+                                <x-button id="reset-video-progress" radius="full" variant="outline"
+                                    class="{{ !$completed ? 'hidden' : '' }}">
+                                    <i style="display: none"
+                                        class="fa-solid animate-spin fa-spinner text-[1.005rem]"></i>
                                     <i class="fa-regular fa-circle-xmark text-[1.005rem]"></i>
                                     <span>Reset Progress</span>
                                 </x-button>
-                                <x-button radius="full" variant="outline">
-                                    <i class="fa-regular fa-circle-check text-[1.005rem]"></i>
-                                    {{-- <i
+                                <x-button :disabled="$completed" data-completed="{{ $completed ? 'true' : 'false' }}"
+                                    id="mark-video-as-completed" radius="full" variant="outline">
+                                    <i style="display: {{ $completed ? 'inline' : 'none' }};"
                                         class="fa-solid text-green-600 dark:text-green-500 fa-circle-check text-[1.005rem]">
-                                    </i> --}}
+                                    </i>
+                                    <i style="display: {{ $completed ? 'none' : 'inline' }};"
+                                        class="fa-regular fa-circle-check text-[1.005rem]"></i>
+                                    <i style="display: none" data-loading-spinner
+                                        class="fa-solid animate-spin fa-spinner text-[1.005rem]"></i>
                                     <span>Mark as completed</span>
                                 </x-button>
                             </div>
