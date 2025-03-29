@@ -21,7 +21,8 @@
 
                 <div
                     class="video-duration-container absolute bottom-2 right-1 text-white text-[13px] px-[5px] py-[1px] font-semibold rounded bg-black/80">
-                    <span class="video-duration">{{ $playlist->total_duration ?? '00:00' }}</span>
+                    <span
+                        class="video-duration">{{ \App\Helpers\DurationConverter::convertYouTubeDuration($video->content_details->duration) }}</span>
                     <!-- Dynamically show "Now playing" -->
                     <span class="video-now-playing hidden">Now playing</span>
                 </div>
@@ -42,11 +43,11 @@
                     <span class="hidden sm:inline-block">•</span>
                     <span class="hidden sm:inline-block">{{ $video->published_at->diffForHumans() }}</span>
                 </div>
-                {{-- @if ($video->is_completed)
-                <x-badge size="md" variant="green-subtle">
-                    <i class="fa-regular fa-circle-check"></i><span class="hidden sm:inline">Completed</span>
-                </x-badge>
-            @endif --}}
+                @if ($video->is_completed)
+                    <x-badge size="md" variant="green-subtle">
+                        <i class="fa-regular fa-circle-check"></i><span class="hidden sm:inline">Completed</span>
+                    </x-badge>
+                @endif
             </div>
         </div>
         <x-dropdown align="right" :gap="0">
