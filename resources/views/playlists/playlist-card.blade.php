@@ -48,7 +48,6 @@
                 </div>
             </div>
         </div>
-        {{-- TODO: Add a link to the playlist --}}
         <a href="{{ env('APP_URL') }}/playlist?list={{ $playlist->playlist_id }}" class="absolute inset-0">
             <span class="sr-only">View playlist</span>
         </a>
