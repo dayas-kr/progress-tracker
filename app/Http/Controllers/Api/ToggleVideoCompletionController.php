@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\DurationConverter;
 use App\Http\Controllers\Controller;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -46,8 +47,12 @@ class ToggleVideoCompletionController extends Controller
      */
     private function toggleCompletion(Video $video, bool $isCompleted): bool
     {
+        $progress = DurationConverter::convertToSecond($video->content_details->duration);
+
+        // update is_completed and progress
         return $video->update([
             'is_completed' => $isCompleted,
+            'progress' => $isCompleted ? $progress : 0
         ]);
     }
 }
