@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Routing\Controller;
 
-class FetchPlaylistInfoController extends Controller
+class GetPlaylistInfoController extends Controller
 {
     /**
      * Handle the incoming request.
