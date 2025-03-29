@@ -86,3 +86,56 @@ describe('convertYouTubeDuration', function () {
         expect(DurationConverter::convertYouTubeDuration('P8S'))->toBe(null);
     });
 });
+
+describe('convertSecondsToYouTubeDuration', function () {
+    it('should convert seconds to minute:second format when less than an hour', function () {
+        expect(DurationConverter::convertSecondsToYouTubeDuration(30))->toBe('0:30');
+        expect(DurationConverter::convertSecondsToYouTubeDuration(3599))->toBe('59:59');
+    });
+
+    it('should convert seconds to hour:minute:second format when one hour or more', function () {
+        expect(DurationConverter::convertSecondsToYouTubeDuration(3600))->toBe('1:00:00');
+        expect(DurationConverter::convertSecondsToYouTubeDuration(3661))->toBe('1:01:01');
+    });
+
+    it('should handle invalid input', function () {
+        expect(DurationConverter::convertSecondsToYouTubeDuration('invalid'))->toBe(null);
+        expect(DurationConverter::convertSecondsToYouTubeDuration(-10))->toBe(null);
+    });
+});
+
+describe('convertSecondsToDuration', function () {
+    it('should return PT0S for 0 seconds', function () {
+        expect(DurationConverter::convertSecondsToDuration(0))->toBe('PT0S');
+    });
+
+    it('should convert seconds to duration with only seconds', function () {
+        expect(DurationConverter::convertSecondsToDuration(30))->toBe('PT30S');
+    });
+
+    it('should convert seconds to duration with minutes and seconds', function () {
+        expect(DurationConverter::convertSecondsToDuration(90))->toBe('PT1M30S');
+    });
+
+    it('should convert seconds to duration with hours, minutes, and seconds', function () {
+        expect(DurationConverter::convertSecondsToDuration(3661))->toBe('PT1H1M1S');
+    });
+
+    it('should convert seconds to duration with days and hours', function () {
+        // 90000 seconds = 1 day (86400s) + 3600 seconds = 1 day and 1 hour
+        expect(DurationConverter::convertSecondsToDuration(90000))->toBe('P1DT1H');
+    });
+
+    it('should convert seconds to duration with years, months, days, hours, minutes, and seconds', function () {
+        $yearSeconds  = 365 * 24 * 60 * 60;
+        $monthSeconds = 30 * 24 * 60 * 60;
+        $daySeconds   = 24 * 60 * 60;
+        $input = 2 * $yearSeconds + 3 * $monthSeconds + 4 * $daySeconds + 5 * 3600 + 6 * 60 + 7;
+        expect(DurationConverter::convertSecondsToDuration($input))->toBe('P2Y3M4DT5H6M7S');
+    });
+
+    it('should handle invalid input', function () {
+        expect(DurationConverter::convertSecondsToDuration('invalid'))->toBe(null);
+        expect(DurationConverter::convertSecondsToDuration(-10))->toBe(null);
+    });
+});
