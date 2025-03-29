@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class FetchPlaylistVideoController extends Controller
+class GetPlaylistVideoController extends Controller
 {
     /**
      * Handle the incoming AJAX request to fetch additional videos.
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, Playlist $playlist)
     {
         try {
-            // Retrieve the playlist by its playlist_id
-            $playlist = Playlist::where('playlist_id', $request->input('playlist_id'))->first();
-
             if (!$playlist) {
                 return response()->json([
                     'status' => 404,

@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\StorePlaylistController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
-use App\Http\Controllers\FetchPlaylistVideoController;
+use App\Http\Controllers\Api\GetPlaylistVideoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,8 +25,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     // Playlists API Routes
     Route::get('/api/playlists/info', GetPlaylistInfoController::class);
-    Route::get('/api/playlist-videos', FetchPlaylistVideoController::class);
     Route::post('/api/playlists', StorePlaylistController::class);
+    Route::get('/api/playlist/{playlist:playlist_id}/videos', GetPlaylistVideoController::class);
 
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');

@@ -43,10 +43,9 @@ function listenForScrollEnd() {
         currentPage++;
 
         $.ajax({
-            url: `/api/playlist-videos`,
+            url: `/api/playlist/${playlistId}/videos`,
             method: "GET",
             data: {
-                playlist_id: playlistId,
                 page: currentPage,
                 _token: csrfToken,
             },
