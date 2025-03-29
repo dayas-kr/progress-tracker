@@ -5,6 +5,7 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\Api\GetPlaylistController;
+use App\Http\Controllers\Api\ShowPlaylistController;
 use App\Http\Controllers\Api\StorePlaylistController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\UpdateVideoTimeController;
@@ -38,7 +39,7 @@ Route::middleware('auth')->group(function () {
 
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
-    Route::get('/playlist', [PlaylistController::class, 'show'])->name('playlists.show');
+    Route::get('/playlist', ShowPlaylistController::class)->name('playlists.show');
     Route::get('/watch', [VideoController::class, 'show'])->name('videos.show');
     Route::delete('/playlist/{playlist:playlist_id}', [PlaylistController::class, 'destroy'])->name('playlists.destroy');
 });
