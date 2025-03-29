@@ -101,7 +101,7 @@
                                     </div>
                                     <div class="text-xs text-zinc-600 dark:text-zinc-400">
                                         <!-- Subscribers -->
-                                        3.77M subscribers
+                                        {{ rand(1, 100) }}.{{ rand(1, 100) }}M subscribers
                                     </div>
                                 </div>
                             </div>
