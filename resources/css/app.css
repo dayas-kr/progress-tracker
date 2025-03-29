@@ -79,3 +79,73 @@
     @apply bg-blue-50 dark:bg-[#04081C] border-blue-200 dark:border-blue-800/30 [&_span]:text-blue-800 [&_span]:dark:text-blue-200 [&_svg]:text-blue-500 [&_svg]:dark:text-blue-400 [&_h3]:text-blue-800 [&_h3]:dark:text-blue-200 [&_p]:text-blue-800 [&_p]:dark:text-blue-200;
 }
 /* custom alert (end) */
+
+/* badge (start) */
+.badge.gray {
+    @apply bg-zinc-500 text-white;
+}
+
+.badge.blue {
+    @apply bg-blue-600 text-white;
+}
+
+.badge.purple {
+    @apply bg-purple-600 text-white;
+}
+
+.badge.amber {
+    @apply bg-amber-500 text-black;
+}
+
+.badge.red {
+    @apply bg-red-500 text-white;
+}
+
+.badge.pink {
+    @apply bg-pink-500 text-white;
+}
+
+.badge.green {
+    @apply bg-green-600 text-white;
+}
+
+.badge.teal {
+    @apply bg-teal-600 text-white;
+}
+
+.badge.gray-subtle {
+    @apply bg-zinc-200 text-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400;
+}
+
+.badge.blue-subtle {
+    @apply bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400;
+}
+
+.badge.purple-subtle {
+    @apply bg-purple-100 text-purple-700 dark:bg-purple-950/50 dark:text-purple-400;
+}
+
+.badge.amber-subtle {
+    @apply bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400;
+}
+
+.badge.red-subtle {
+    @apply bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-400;
+}
+
+.badge.pink-subtle {
+    @apply bg-pink-100 text-pink-700 dark:bg-pink-950/50 dark:text-pink-400;
+}
+
+.badge.green-subtle {
+    @apply bg-[#E9F6ED] text-green-700 dark:bg-green-950/50 dark:text-green-400;
+}
+
+.badge.teal-subtle {
+    @apply bg-teal-100 text-teal-700 dark:bg-teal-950/50 dark:text-teal-400;
+}
+
+.badge.invert {
+    @apply bg-gray-900 text-gray-100 dark:invert;
+}
+/* badge (end) */
