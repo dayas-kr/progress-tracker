@@ -92,8 +92,8 @@ function listenForScrollEnd() {
                 elementHeight = scrollElement.outerHeight();
             }
 
-            // Trigger fetch if scrolled near the bottom (buffer of 100px)
-            if (scrollHeight - scrollTop <= elementHeight + 100) {
+            // Trigger fetch if scrolled near the bottom (buffer of 24px)
+            if (scrollHeight - scrollTop <= elementHeight + 24) {
                 handleScrollEnd();
             }
         }
