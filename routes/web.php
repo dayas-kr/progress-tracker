@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\Api\GetPlaylistController;
 use App\Http\Controllers\Api\StorePlaylistController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
@@ -26,6 +27,7 @@ Route::middleware('auth')->group(function () {
     // Playlists API Routes
     Route::get('/api/playlists/info', GetPlaylistInfoController::class);
     Route::post('/api/playlists', StorePlaylistController::class);
+    Route::get('/api/playlists', GetPlaylistController::class);
     Route::get('/api/playlist/{playlist:playlist_id}/videos', GetPlaylistVideoController::class);
 
     // Playlists Routes
