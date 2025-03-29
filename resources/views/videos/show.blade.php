@@ -79,7 +79,7 @@
                 <div class="flex-1 flex flex-col lg:h-[calc(100vh-(56px+40px))]">
                     <div id="player" data-time={{ $video->progress ?? 0 }} data-list="{{ $playlist->playlist_id }}"
                         data-video-id="{{ $video->video_id }}"
-                        class="relative w-full aspect-video bg-zinc-200 overflow-hidden dark:bg-zinc-800 rounded-xl">
+                        class="relative w-full h-auto aspect-video bg-zinc-200 overflow-hidden dark:bg-zinc-800 rounded-xl">
                         <!-- YouTube player will be injected here -->
                     </div>
                     <div class="py-2.5 space-y-3">

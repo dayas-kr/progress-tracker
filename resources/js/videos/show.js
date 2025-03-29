@@ -33,13 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .css({ width: "100%", height: "100%" });
     }, 100);
 
-    // Function to adjust the height based on 16:9 aspect ratio
-    adjustPlayerSize(document.getElementById("player"));
-
-    // Adjust player size on load and on window resize
-    adjustPlayerSize();
-    window.addEventListener("resize", adjustPlayerSize);
-
     // Variable to hold the player object
     let player;
     let lastSentTime = -1;
@@ -158,14 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // helper functions
-function adjustPlayerSize(player) {
-    if (player) {
-        const width = player.clientWidth;
-        const height = (width * 9) / 16;
-        player.style.height = `${height}px`;
-    }
-}
-
 function markVideoAsCompleted(data, button) {
     const faCircleCheckIcon = button.find(".fa-regular.fa-circle-check");
     const faSpinner = button.find(".fa-spinner");
