@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
-use App\Http\Controllers\StorePlaylistController;
+use App\Http\Controllers\Api\StorePlaylistController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
 
