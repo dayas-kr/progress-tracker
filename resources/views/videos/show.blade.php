@@ -76,10 +76,11 @@
             <!-- On mobile, use column layout; on larger screens (lg and up) use row -->
             <div class="max-w-[1705px] mx-auto w-full flex flex-col lg:flex-row gap-5 px-3.5 lg:px-0">
                 <!-- Video and Details Section -->
-                <div class="flex-1 lg:h-[calc(100vh-(56px+40px))]">
-                    <div class="bg-zinc-200 overflow-hidden aspect-video dark:bg-zinc-800 rounded-xl">
-                        <!-- Youtube Embed Video -->
-                        {!! $video->player->embedHtml !!}
+                <div class="flex-1 flex flex-col lg:h-[calc(100vh-(56px+40px))]">
+                    <div id="player" data-time={{ $video->progress ?? 0 }} data-list="{{ $playlist->playlist_id }}"
+                        data-video-id="{{ $video->video_id }}"
+                        class="relative w-full aspect-video bg-zinc-200 overflow-hidden dark:bg-zinc-800 rounded-xl">
+                        <!-- YouTube player will be injected here -->
                     </div>
                     <div class="py-2.5 space-y-3">
                         <div class="text-xl font-bold text-zinc-800 dark:text-zinc-50">
@@ -94,7 +95,7 @@
                                         alt="Channel Thumbnail">
                                 </div>
                                 <div class="flex-1">
-                                    <div class="font-medium text-zinc-800 dark:text-zinc-100">
+                                    <div class="font-medium text-nowrap text-zinc-800 dark:text-zinc-100">
                                         <!-- Channel Title -->
                                         <a href="#">{{ $video->channel->channelTitle }}</a>
                                     </div>
@@ -106,6 +107,7 @@
                             </div>
 
                             <div class="flex gap-2.5">
+                                <x-switch id="auto-play-switch" label="Auto Play" />
                                 <x-button radius="full" variant="outline">
                                     {{-- <i class="fa-solid animate-spin fa-spinner text-[1.005rem]"></i> --}}
                                     <i class="fa-regular fa-circle-xmark text-[1.005rem]"></i>
@@ -124,7 +126,7 @@
                 </div>
                 <!-- Playlist Sidebar -->
                 <div
-                    class="lg:max-w-[400px] w-full border dark:border-zinc-700 rounded-xl flex flex-col h-fit max-h-[50vh] sm:max-h-[calc(100vh-(56px+40px))] overflow-hidden">
+                    class="lg:max-w-[400px] w-full border dark:border-zinc-700 rounded-xl h-fit flex flex-col max-h-[50vh] sm:max-h-[calc(100vh-(56px+40px))] overflow-hidden">
                     <!-- Playlist Video Header -->
                     <div class="h-16 bg-white dark:bg-zinc-900 py-2 pl-6 pr-2.5">
                         <a href="{{ env('APP_URL') }}/playlist?list={{ $playlist->playlist_id }}"
@@ -171,6 +173,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Load the YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <x-slot name="script">
         @vite('resources/js/videos/show.js')

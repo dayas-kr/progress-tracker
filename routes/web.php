@@ -7,6 +7,7 @@ use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\Api\GetPlaylistController;
 use App\Http\Controllers\Api\StorePlaylistController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
+use App\Http\Controllers\Api\UpdateVideoTimeController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
 
 Route::get('/', function () {
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/playlists', StorePlaylistController::class);
     Route::get('/api/playlists', GetPlaylistController::class);
     Route::get('/api/playlist/{playlist:playlist_id}/videos', GetPlaylistVideoController::class);
+    // update the time for videos
+    Route::post('/api/update-time', UpdateVideoTimeController::class);
 
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
