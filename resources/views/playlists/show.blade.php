@@ -149,11 +149,12 @@
                             class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-r border-b yt-lg:border-b-0 dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Progress</span>
                             <span
-                                class="text-lg font-bold  text-green-600 dark:text-green-500">{{ $playlist->progress }}%</span>
+                                class="text-lg font-bold  text-green-600 dark:text-green-500">{{ $playlist_stats->playlist_progress }}%</span>
                         </div>
                         <div class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-0 border-x border-b dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Videos</span>
-                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">{{ $completed_videos }}
+                            <span
+                                class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">{{ $playlist_stats->completed_videos }}
                                 /
                                 {{ $playlist->video_count }}</span>
                         </div>
@@ -161,18 +162,21 @@
                             class="yt-lg:px-4 px-3.5 py-2 yt-lg:border border-b yt-lg:border-l-0 dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Total
                                 duration</span>
-                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">7:51:44</span>
+                            <span
+                                class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">{{ $playlist_stats->total_duration }}</span>
                         </div>
                         <div class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-y dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Average
                                 duration</span>
-                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">33:41</span>
+                            <span
+                                class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">{{ $playlist_stats->average_duration }}</span>
                         </div>
                         <div
                             class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-r border-x yt-lg:border-l-0 dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Remaining
                                 duration</span>
-                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">7:51:44</span>
+                            <span
+                                class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">{{ $playlist_stats->remaing_duration }}</span>
                         </div>
                         <div class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-0 dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Time
