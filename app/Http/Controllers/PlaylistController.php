@@ -35,8 +35,9 @@ class PlaylistController extends Controller
         $videos = $playlist->videos()->paginate(10);
 
         $positionWidth = $this->getPositionWidth($playlist->video_count);
+        $completed_videos = $playlist->videos()->where('is_completed', true)->count();
 
-        return view('playlists.show', compact('playlist', 'videos', 'positionWidth'));
+        return view('playlists.show', compact('playlist', 'videos', 'positionWidth', 'completed_videos'));
     }
 
     public function destroy(Playlist $playlist)

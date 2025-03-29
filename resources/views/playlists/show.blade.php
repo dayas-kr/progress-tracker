@@ -153,7 +153,8 @@
                         </div>
                         <div class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-0 border-x border-b dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Videos</span>
-                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">0 /
+                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">{{ $completed_videos }}
+                                /
                                 {{ $playlist->video_count }}</span>
                         </div>
                         <div
