@@ -9,13 +9,13 @@
                     alt="{{ $video->title }}">
 
                 @php
-                    $test = rand(0, 100);
+                    $progress = min(($video->progress / $video->duration_in_seconds) * 100, 100);
                 @endphp
 
-                <div data-progress="{{ $test }}" data-progress-bg
+                <div data-progress="{{ $progress }}" data-progress-bg
                     class="absolute h-1 bottom-0 left-0 right-0 bg-white/50 data-[progress=0]:hidden data-[progress=100]:hidden">
                 </div>
-                <div data-progress="{{ $test }}" style="width: {{ $test }}%" data-progress-indicator
+                <div data-progress="{{ $progress }}" style="width: {{ $progress }}%" data-progress-indicator
                     class="absolute h-1 bottom-0 left-0 bg-[#F03] data-[progress=0]:hidden data-[progress=100]:hidden">
                 </div>
 

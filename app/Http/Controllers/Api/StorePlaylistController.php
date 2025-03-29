@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\DurationConverter;
 use App\Http\Controllers\Controller;
 use App\Models\Video;
 use App\Models\Playlist;
@@ -108,6 +109,7 @@ class StorePlaylistController extends Controller
             'channel'         => json_encode($video['channel']),
             'status'          => json_encode($video['status']),
             'player'          => json_encode($video['player']),
+            'duration_in_seconds' => DurationConverter::convertToSecond($video['contentDetails']['duration']),
         ]);
     }
 }

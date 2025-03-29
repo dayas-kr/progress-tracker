@@ -4,6 +4,7 @@
     'variant' => 'primary',
     'radius' => 'medium',
     'icon' => false,
+    'disabled' => false,
 ])
 
 @php
@@ -146,7 +147,7 @@
     <a href="{{ $href }}" class="w-fit">
 @endif
 
-<button {{ $attributes->merge(['class' => $btnClasses]) }}>
+<button @disabled($disabled) {{ $attributes->merge(['class' => $btnClasses]) }}>
     {{ $slot }}
 </button>
 

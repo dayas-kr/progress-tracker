@@ -24,8 +24,9 @@ class VideoController extends Controller
         $playlist = $video->playlist;
         $index = $this->calculateIndex($request, $playlist->video_count);
         $positionWidth = $this->getPositionWidth($playlist->video_count);
+        $completed = $video->is_completed;
 
-        return view('videos.show', compact('video', 'playlist', 'index', 'positionWidth'));
+        return view('videos.show', compact('video', 'playlist', 'index', 'positionWidth', 'completed'));
     }
 
     private function calculateIndex(Request $request, $playlistVideoCount): int

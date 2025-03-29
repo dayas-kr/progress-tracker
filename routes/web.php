@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\StorePlaylistController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\UpdateVideoTimeController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
+use App\Http\Controllers\Api\ToggleVideoCompletionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/playlist/{playlist:playlist_id}/videos', GetPlaylistVideoController::class);
     // update the time for videos
     Route::post('/api/update-time', UpdateVideoTimeController::class);
+
+    Route::post('/api/toggle-video-completion', ToggleVideoCompletionController::class);
 
     // Playlists Routes
     Route::resource('/playlists', PlaylistController::class)->only('index', 'create');
