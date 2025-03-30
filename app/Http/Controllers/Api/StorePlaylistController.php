@@ -41,7 +41,7 @@ class StorePlaylistController extends Controller
             $this->fetchAndStoreVideos($playlist->id, $playlistData['playlistId']);
 
             // Step 3: Update the playlist total_duration
-            $this->updatePlaylistDuration($playlist->id);
+            $this->updatePlaylistTotalAndAverageDuration($playlist->id);
 
             DB::commit();
 
@@ -116,10 +116,13 @@ class StorePlaylistController extends Controller
         ]);
     }
 
-    private function updatePlaylistDuration($playlistId)
+    private function updatePlaylistTotalAndAverageDuration($playlistId)
     {
-        $playlist = Playlist::findOrFail($playlistId);
-        $playlist->total_duration = $playlist->videos()->sum('duration_in_seconds');
+        $playlist = Playlist::find($playlistId);
+        $total_duration = $playlist->videos()->sum('duration_in_seconds');
+
+        $playlist->total_duration = $total_duration;
+        $playlist->average_duration = round($total_duration / $playlist->video_count);
         $playlist->save();
     }
 }
