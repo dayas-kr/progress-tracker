@@ -27,6 +27,6 @@
         </div>
     </div>
     @if ($label)
-        <span class="text-xs font-medium text-zinc-700 dark:text-zinc-400 {{ $direction }}">{{ $label }}</span>
+        <span class="text-sm font-medium text-zinc-900 dark:text-zinc-50 {{ $direction }}">{{ $label }}</span>
     @endif
 </label>
