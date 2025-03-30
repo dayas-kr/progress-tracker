@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\Api\VideoResetController;
 use App\Http\Controllers\Api\GetPlaylistController;
 use App\Http\Controllers\Api\ShowPlaylistController;
 use App\Http\Controllers\Api\IndexPlaylistController;
 use App\Http\Controllers\Api\StorePlaylistController;
+use App\Http\Controllers\Api\VideoProgressController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\UpdateVideoTimeController;
+use App\Http\Controllers\Api\VideoCompletionController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
 use App\Http\Controllers\Api\ToggleVideoCompletionController;
 
@@ -36,7 +39,9 @@ Route::middleware('auth')->group(function () {
     // update the time for videos
     Route::post('/api/update-time', UpdateVideoTimeController::class);
 
-    Route::post('/api/toggle-video-completion', ToggleVideoCompletionController::class);
+    // Video Progress API Routes
+    Route::post('/api/videos/complete', [VideoProgressController::class, 'complete']);
+    Route::post('/api/videos/reset', [VideoProgressController::class, 'reset']);
 
     // Playlists Routes
     Route::get('/playlists', IndexPlaylistController::class)->name('playlists.index');

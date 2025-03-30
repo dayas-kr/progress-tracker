@@ -1,22 +1,14 @@
 import $ from "jquery";
 import { setItemWithExpiration } from "../utils/session";
+import createAlert from "../ui/alert";
 
 const csrfToken = $('meta[name="csrf-token"]').attr("content");
-const autoplaySwitch = $("#auto-play-switch");
-
-// Set default value as string "true" for localStorage and ensure the switch is updated as a boolean.
-if (localStorage.getItem("auto-play") === null) {
-    localStorage.setItem("auto-play", "true");
-}
-autoplaySwitch.prop("checked", localStorage.getItem("auto-play") === "true");
+const videoId = $("#player").data("video-id");
+const markCompletedBtn = $("#mark-completed");
+const resetProgressBtn = $("#reset-progress");
+const alertContainer = $("#alert-container");
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Update localStorage when the switch changes.
-    autoplaySwitch.on("change", () => {
-        const isChecked = autoplaySwitch.prop("checked");
-        localStorage.setItem("auto-play", isChecked ? "true" : "false");
-    });
-
     // Retrieve the video ID, playlist ID, and start time from the player container
     const playerElement = document.getElementById("player");
     const videoId = playerElement?.dataset.videoId;
@@ -37,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let player;
     let lastSentTime = -1;
 
-    // Function to initialize the YouTube Player with the start time and autoplay enabled based on localStorage.
+    // Function to initialize the YouTube Player with the start time and always auto play.
     function initializePlayer() {
         if (!videoId) {
             console.error("No video ID found.");
@@ -49,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             videoId: videoId,
             playerVars: {
                 start: startTime, // Start the video at the provided time
-                autoplay: localStorage.getItem("auto-play") === "true" ? 1 : 0,
+                autoplay: 1,
             },
             events: {
                 onReady: onPlayerReady,
@@ -77,6 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function onPlayerStateChange(event) {
         if (event.data === YT.PlayerState.PAUSED) {
             sendPauseTimeToAPI(); // Send update when user pauses the video
+        } else if (event.data === YT.PlayerState.ENDED) {
+            VideoCompletionLogic(playlistId);
         }
     }
 
@@ -95,13 +89,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Send the current time to your API endpoint and store it in localStorage
     function sendTimeToAPI(currentTime) {
-        // Save the current time in local storage with a 1-hour expiration.
-        const storageKey = `videoTime_${videoId}`;
-        setItemWithExpiration(storageKey, currentTime, 3600);
+        // Only update the time if the video is not marked as completed
+        if (!markCompletedBtn.data("video-completed")) {
+            // Save the current time in local storage with a 1-hour expiration.
+            const storageKey = `videoTime_${videoId}`;
+            setItemWithExpiration(storageKey, currentTime, 3600);
 
-        // Only update the database every 10 seconds.
-        if (currentTime % 10 === 0) {
-            sendUpdateRequest(currentTime);
+            // Only update the database every 10 seconds.
+            if (currentTime % 10 === 0) {
+                sendUpdateRequest(currentTime);
+            }
         }
     }
 
@@ -109,7 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function sendPauseTimeToAPI() {
         if (player && typeof player.getCurrentTime === "function") {
             const pausedTime = Math.floor(player.getCurrentTime());
-            sendUpdateRequest(pausedTime);
+            if (!markCompletedBtn.data("video-completed")) {
+                sendUpdateRequest(pausedTime);
+            }
         }
     }
 
@@ -138,83 +137,95 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Mark video as completed
-    $("#mark-video-as-completed").on("click", function () {
-        const data = { _token: csrfToken, v: videoId, completed: 1 };
-        markVideoAsCompleted(data, $(this));
+    markCompletedBtn.on("click", function () {
+        if (!$(this).data("video-completed")) {
+            const data = { _token: csrfToken, v: videoId };
+            markVideoAsCompleted(data, $(this));
+        }
     });
 
     // Mark video as uncompleted
-    $("#reset-video-progress").on("click", function () {
-        const data = { _token: csrfToken, v: videoId, completed: 0 };
-        markVideoAsUncompleted(data, $(this));
+    resetProgressBtn.on("click", function () {
+        if (markCompletedBtn.data("video-completed")) {
+            const data = { _token: csrfToken, v: videoId };
+            markVideoAsUncompleted(data, $(this), markCompletedBtn);
+        }
     });
 });
 
 // helper functions
 function markVideoAsCompleted(data, button) {
-    const faCircleCheckIcon = button.find(".fa-regular.fa-circle-check");
-    const faSpinner = button.find(".fa-spinner");
+    const checkIcon = button.find(".check-icon");
+    const checkedIcon = button.find(".checked-icon");
+    const spinnerIcon = button.find(".spinner-icon");
 
     $.ajax({
-        url: "/api/toggle-video-completion",
+        url: "/api/videos/complete",
         method: "POST",
-        data: data,
+        data: { _token: csrfToken, v: videoId },
         beforeSend: () => {
-            faCircleCheckIcon.hide();
-            faSpinner.show();
-        },
-        success: (response) => {
-            faSpinner.hide();
-            if (response.success) {
-                button.find(".fa-solid.fa-circle-check").show();
-                button.prop("disabled", true);
-                button.attr("data-completed", "true");
-                $("#reset-video-progress").removeClass("hidden");
-            } else {
-                faCircleCheckIcon.show();
+            if (!$(this).data("video-completed")) {
+                checkIcon.addClass("display-none");
+                spinnerIcon.removeClass("hidden");
+                checkedIcon.addClass("display-none");
             }
         },
-        error: (error) => {
-            faSpinner.hide();
-            faCircleCheckIcon.show();
+        success: (response) => {
+            console.log(response);
+            spinnerIcon.addClass("hidden");
+            if (response.status === "success") {
+                checkedIcon.removeClass("display-none");
+                button.data("video-completed", true);
+            } else {
+                checkIcon.removeClass("display-none");
+                alertContainer.append(
+                    createAlert({
+                        type: "error",
+                        message: "Playlist with given ID does not exist.",
+                        timeout: 5000,
+                    })
+                );
+            }
+        },
+        error: () => {
+            spinnerIcon.addClass("hidden");
+            checkIcon.removeClass("display-none");
         },
     });
 }
 
-function markVideoAsUncompleted(data, button) {
-    const faXmarkIcon = button.find(".fa-circle-xmark");
-    const faSpinner = button.find(".fa-spinner");
-    const markCompletedButton = $("#mark-video-as-completed");
-    const faSolidCheck = markCompletedButton.find(".fa-solid.fa-circle-check");
-    const faRegularCheck = markCompletedButton.find(
-        ".fa-regular.fa-circle-check"
-    );
-
+function markVideoAsUncompleted(data, button, markCompletedBtn) {
     $.ajax({
-        url: "/api/toggle-video-completion",
+        url: "/api/videos/reset",
         method: "POST",
-        data: data,
-        beforeSend: () => {
-            faXmarkIcon.hide();
-            faSpinner.show();
-        },
+        data: { _token: csrfToken, v: videoId },
         success: (response) => {
-            faSpinner.hide();
-            if (response.success) {
-                button.addClass("hidden");
-                faXmarkIcon.show();
-                markCompletedButton
-                    .prop("disabled", false)
-                    .prop("data-completed", false);
-                faSolidCheck.hide();
-                faRegularCheck.show();
-            } else {
-                faXmarkIcon.show();
+            console.log(response);
+            if (response.status === "success") {
+                markCompletedBtn
+                    .find(".check-icon")
+                    .removeClass("display-none");
+                markCompletedBtn.find(".checked-icon").addClass("display-none");
+                markCompletedBtn.data("video-completed", false);
             }
         },
         error: () => {
-            faSpinner.hide();
-            faXmarkIcon.show();
+            //
         },
     });
+}
+
+function VideoCompletionLogic(playlistId) {
+    const currentVideoEl = $(`[data-video-card][data-video-id="${videoId}"]`);
+
+    const nextVideo = currentVideoEl.next("[data-video-card]");
+
+    const nextVideoId = nextVideo.data("video-id");
+
+    // mark current video as completed
+    markVideoAsCompleted({ _token: csrfToken, v: videoId }, markCompletedBtn);
+
+    if (nextVideo.length > 0) {
+        window.location.href = `/watch?v=${nextVideoId}&list=${playlistId}`;
+    }
 }

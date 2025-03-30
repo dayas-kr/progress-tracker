@@ -9,7 +9,11 @@
                     alt="{{ $video->title }}">
 
                 @php
-                    $progress = min(($video->progress / $video->duration_in_seconds) * 100, 100);
+                    if ($video->progress < 30 && $video->duration_in_seconds - $video->progress > 30) {
+                        $progress = 0;
+                    } else {
+                        $progress = min(($video->progress / $video->duration_in_seconds) * 100, 100);
+                    }
                 @endphp
 
                 <div data-progress="{{ $progress }}" data-progress-bg

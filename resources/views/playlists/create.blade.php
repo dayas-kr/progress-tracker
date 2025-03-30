@@ -195,7 +195,7 @@
         </x-card>
     </div>
 
-    <div id="alert-container" class="fixed top-4 right-4 space-y-2 min-w-xl"></div>
+    <div id="alert-container" class="fixed top-4 z-50 right-4 space-y-2 min-w-xl"></div>
 
     <x-slot name="script">
         @vite('resources/js/playlists/create.js')

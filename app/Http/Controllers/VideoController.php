@@ -26,7 +26,20 @@ class VideoController extends Controller
         $positionWidth = $this->getPositionWidth($playlist->video_count);
         $completed = $video->is_completed;
 
-        return view('videos.show', compact('video', 'playlist', 'index', 'positionWidth', 'completed'));
+        // New logic: if progress is less than 30 seconds and there's at least 30 seconds left, start_time is 0.
+        if (!$video->progress < 30 && 30 < ($video->duration_in_seconds - $video->progress)) {
+            $start_time = $video->progress;
+        } else {
+            $start_time = 0;
+        }
+
+        // !
+        $nextVideo = $playlist->videos()
+            ->where('position', $index + 1)
+            ->first() ?? null;
+        // !
+
+        return view('videos.show', compact('video', 'playlist', 'index', 'positionWidth', 'completed', 'start_time', 'nextVideo'));
     }
 
     private function calculateIndex(Request $request, $playlistVideoCount): int

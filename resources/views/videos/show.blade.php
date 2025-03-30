@@ -76,12 +76,38 @@
             <!-- On mobile, use column layout; on larger screens (lg and up) use row -->
             <div class="max-w-[1705px] mx-auto w-full flex flex-col lg:flex-row gap-5 px-3.5 lg:px-0">
                 <!-- Video and Details Section -->
-                <div class="flex-1 flex flex-col lg:h-[calc(100vh-(56px+40px))]">
-                    <div id="player" data-time={{ $video->progress ?? 0 }} data-list="{{ $playlist->playlist_id }}"
-                        data-video-id="{{ $video->video_id }}"
+                <div id="player-container" class="flex-1 flex relative flex-col lg:h-[calc(100vh-(56px+40px))]">
+                    <div
                         class="relative w-full h-auto aspect-video bg-zinc-200 overflow-hidden dark:bg-zinc-800 rounded-xl">
-                        <!-- YouTube player will be injected here -->
+                        <div class="w-full h-full" id="player" data-time={{ $start_time }}
+                            data-list="{{ $playlist->playlist_id }}" data-video-id="{{ $video->video_id }}"></div>
+
+                        <div style="display: none;"
+                            class="backdrop-blur-3xl z-50 bg-black/75 absolute inset-0 flex items-center justify-center">
+                            <div class="w-full max-w-md flex flex-col">
+                                <p class="text-sm text-zinc-200">Up next in <strong class="text-white">2</strong></p>
+                                <div
+                                    class="dark:bg-zinc-800 mt-3 border border-zinc-500 bg-zinc-700 rounded-xl aspect-video overflow-hidden">
+                                    <img class="h-full w-full object-cover"
+                                        src="{{ $nextVideo->thumbnails->medium->url }}" alt="Thumbnail">
+                                </div>
+                                <p class="text-lg line-clamp-2 text-zinc-100 mt-2">{{ $nextVideo->title }}</p>
+
+                                <div class="flex gap-2 mt-4">
+                                    <button
+                                        class="w-full bg-[#1C1C1C] py-2 px-3 rounded-full text-sm uppercase text-white font-semibold">
+                                        Cancel
+                                    </button>
+                                    <button
+                                        class="w-full bg-[#575757] py-2 px-3 rounded-full text-sm uppercase text-white font-semibold">
+                                        Play Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+
                     <div class="py-2.5 space-y-3">
                         <div class="text-xl font-bold text-zinc-800 dark:text-zinc-50">
                             <!-- Video Title -->
@@ -107,25 +133,22 @@
                             </div>
 
                             <div class="flex gap-2.5">
-                                <x-switch id="auto-play-switch" label="Auto Play" />
-
-                                <x-button id="reset-video-progress" radius="full" variant="outline"
-                                    class="{{ !$completed ? 'hidden' : '' }}">
-                                    <i style="display: none"
-                                        class="fa-solid animate-spin fa-spinner text-[1.005rem]"></i>
-                                    <i class="fa-regular fa-circle-xmark text-[1.005rem]"></i>
-                                    <span>Reset Progress</span>
+                                <x-button id="reset-progress" radius="full" variant="outline"
+                                    data-video-completed="{{ $video->is_completed ? 'true' : 'false' }}">
+                                    <i class="fa-solid reset-icon fa-rotate-left text-[0.9rem]"></i>
+                                    <span>Reset progress</span>
                                 </x-button>
-                                <x-button :disabled="$completed" data-completed="{{ $completed ? 'true' : 'false' }}"
-                                    id="mark-video-as-completed" radius="full" variant="outline">
-                                    <i style="display: {{ $completed ? 'inline' : 'none' }};"
-                                        class="fa-solid text-green-600 dark:text-green-500 fa-circle-check text-[1.005rem]">
-                                    </i>
-                                    <i style="display: {{ $completed ? 'none' : 'inline' }};"
-                                        class="fa-regular fa-circle-check text-[1.005rem]"></i>
-                                    <i style="display: none" data-loading-spinner
-                                        class="fa-solid animate-spin fa-spinner text-[1.005rem]"></i>
+                                <x-button id="mark-completed" radius="full" variant="outline"
+                                    data-video-completed="{{ $video->is_completed ? 'true' : 'false' }}">
+                                    <x-loading-spinner class="animate-spin size-4 spinner-icon hidden" />
+                                    <i
+                                        class="fa-regular fa-circle-check {{ $video->is_completed ? 'display-none' : '' }} check-icon text-[1.005rem]"></i>
+                                    <i
+                                        class="fa-solid text-green-600 {{ $video->is_completed ? '' : 'display-none' }} dark:text-green-500 fa-circle-check checked-icon text-[1.005rem]"></i>
                                     <span>Mark as completed</span>
+                                </x-button>
+                                <x-button data-dialog-target="video-option-dialog" radius="full" variant="outline">
+                                    Options
                                 </x-button>
                             </div>
                         </div>
@@ -146,9 +169,9 @@
                         </div>
                     </div>
                     <!-- Video List -->
-                    <div class="flex-1 overflow-y-auto custom-scrollbar">
+                    <div class="flex-1 overflow-y-auto custom-scrollbar" id="playlist-videos">
                         @foreach ($playlist->videos as $_video)
-                            <div
+                            <div data-video-card data-video-id="{{ $_video->video_id }}"
                                 class="flex relative justify-between p-2 flex-wrap {{ $_video->video_id === $video->video_id ? 'bg-blue-100 dark:bg-blue-900/25' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
                                 <div class="my-auto text-sm text-zinc-600 dark:text-zinc-400 {{ $positionWidth }}">
                                     {{ $_video->position + 1 }}
@@ -181,6 +204,31 @@
             </div>
         </div>
     </div>
+
+    <div id="video-option-dialog" data-dialog-backdrop
+        class="fixed inset-0 bg-zinc-900/50 dark:bg-black/60 z-[1000] flex items-center justify-center px-5 sm:px-0"
+        style="display: none;">
+        <div data-dialog-content
+            class="w-full max-w-xl p-6 border border-white dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-xl"
+            aria-modal="true" tabindex="0">
+            <h3 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Video Playback Options</h3>
+            <p class="mb-5 mt-2 text-sm text-zinc-800 dark:text-zinc-200">
+                Customize your video settings and behavior below.
+            </p>
+            <div class="space-y-4">
+                <x-checkbox checked label="Automatically Mark as Completed"
+                    description="The video will be marked as completed once it has been fully played." />
+                <x-switch checked label="Enable Auto Play for Next Video" />
+            </div>
+
+            <div class="mt-5 flex justify-end gap-2">
+                <x-button data-dialog-cancel class="w-fit" variant="secondary">Cancel</x-button>
+                <x-button data-dialog-confirm class="w-fit">Save Changes</x-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-container" class="fixed top-4 z-[100] right-4 space-y-2 min-w-xl"></div>
 
     <!-- Load the YouTube IFrame API -->
     <script src="https://www.youtube.com/iframe_api"></script>
