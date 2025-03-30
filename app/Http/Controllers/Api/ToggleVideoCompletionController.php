@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers\DurationConverter;
-use App\Http\Controllers\Controller;
 use App\Models\Video;
+use App\Models\Playlist;
 use Illuminate\Http\Request;
+use App\Helpers\DurationConverter;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class ToggleVideoCompletionController extends Controller
 {
@@ -49,10 +51,39 @@ class ToggleVideoCompletionController extends Controller
     {
         $progress = DurationConverter::convertToSecond($video->content_details->duration);
 
-        // update is_completed and progress
-        return $video->update([
+        // Update video completion status and progress
+        $videoUpdated = $video->update([
             'is_completed' => $isCompleted,
-            'progress' => $isCompleted ? $progress : 0
+            'progress'     => $isCompleted ? $progress : 0,
         ]);
+
+        // Ensure playlist relationship is loaded
+        if (!$video->relationLoaded('playlist')) {
+            $video->load('playlist');
+        }
+
+        // Check if playlist exists
+        if ($video->playlist) {
+            // Refresh playlist videos to ensure latest data
+            $video->playlist->load('videos');
+
+            // Calculate the total progress for the playlist
+            $total_video_progress = $video->playlist->videos()->sum('progress');
+
+            // Log debug info
+            Log::debug('Updating playlist progress', [
+                'playlist_id'         => $video->playlist->id,
+                'total_video_progress' => $total_video_progress,
+            ]);
+
+            // Update playlist progress
+            $playlistUpdated = $video->playlist->update([
+                'progress' => $total_video_progress,
+            ]);
+
+            return $videoUpdated && $playlistUpdated;
+        }
+
+        return $videoUpdated;
     }
 }

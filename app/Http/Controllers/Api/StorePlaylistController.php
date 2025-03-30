@@ -40,6 +40,9 @@ class StorePlaylistController extends Controller
             // Step 2: Fetch and store videos
             $this->fetchAndStoreVideos($playlist->id, $playlistData['playlistId']);
 
+            // Step 3: Update the playlist total_duration
+            $this->updatePlaylistDuration($playlist->id);
+
             DB::commit();
 
             return response()->json([
@@ -111,5 +114,12 @@ class StorePlaylistController extends Controller
             'player'          => json_encode($video['player']),
             'duration_in_seconds' => DurationConverter::convertToSecond($video['contentDetails']['duration']),
         ]);
+    }
+
+    private function updatePlaylistDuration($playlistId)
+    {
+        $playlist = Playlist::findOrFail($playlistId);
+        $playlist->total_duration = $playlist->videos()->sum('duration_in_seconds');
+        $playlist->save();
     }
 }

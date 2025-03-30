@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="mt-3.5 flex items-center gap-x-2 text-sm text-zinc-600 dark:text-zinc-400">
-                    @if ($playlist->watched)
+                    @if ($playlist->progress > 0)
                         <x-gmdi-schedule class="size-4" />
                         Last watched {{ $playlist->updated_at->diffForHumans() }}
                     @else

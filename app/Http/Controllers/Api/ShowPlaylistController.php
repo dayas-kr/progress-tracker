@@ -19,9 +19,7 @@ class ShowPlaylistController extends Controller
         if (!$playlist) return abort(404);
 
         $videos = $playlist->videos()->paginate(10);
-
         $positionWidth = $this->getPositionWidth($playlist->video_count);
-
         $playlist_stats = $this->playlistStats($playlist);
 
         return view('playlists.show', compact('playlist', 'videos', 'positionWidth', 'playlist_stats'));
@@ -29,48 +27,43 @@ class ShowPlaylistController extends Controller
 
     private function playlistStats(Playlist $playlist): object
     {
-        $totat_duration_sec = $playlist->videos->sum(function ($video) {
-            return DurationConverter::convertToSecond($video->content_details->duration);
-        });
-
+        $totat_duration_sec = $playlist->total_duration;
         $total_duration = DurationConverter::convertSecondsToYouTubeDuration($totat_duration_sec);
-
         $average_duration_sec = round($totat_duration_sec / $playlist->video_count);
-
         $average_duration = DurationConverter::convertSecondsToYouTubeDuration($average_duration_sec);
-
         $completed_videos = $playlist->videos()->where('is_completed', true)->count();
-
         $playlist_progress = $this->playlistProgress($playlist, $totat_duration_sec);
-
         $remaing_duration = $this->remaingDuration($playlist, $totat_duration_sec);
 
-        return (object)
-        [
-            'total_duration' => $total_duration,
-            'average_duration' => $average_duration,
-            'completed_videos' => $completed_videos,
+        return (object)[
+            'total_duration'    => $total_duration,
+            'average_duration'  => $average_duration,
+            'completed_videos'  => $completed_videos,
             'playlist_progress' => $playlist_progress,
-            'remaing_duration' => $remaing_duration
+            'remaing_duration'  => $remaing_duration,
         ];
     }
 
     private function playlistProgress(Playlist $playlist, int $totat_duration_sec)
     {
-        $completed_duration_sec = $playlist->videos()->where('is_completed', true)->get()->sum(function ($video) {
-            return DurationConverter::convertToSecond($video->content_details->duration);
-        });
+        $completed_duration_sec = $playlist->videos()
+            ->where('is_completed', true)
+            ->get()
+            ->sum(function ($video) {
+                return DurationConverter::convertToSecond($video->content_details->duration);
+            });
 
-        $playlist_progress = round(($completed_duration_sec * 100) / $totat_duration_sec);
-
-        return $playlist_progress;
+        return round(($completed_duration_sec * 100) / $totat_duration_sec);
     }
 
     private function remaingDuration(Playlist $playlist, int $totat_duration_sec)
     {
-        $completed_duration_sec = $playlist->videos()->where('is_completed', true)->get()->sum(function ($video) {
-            return DurationConverter::convertToSecond($video->content_details->duration);
-        });
+        $completed_duration_sec = $playlist->videos()
+            ->where('is_completed', true)
+            ->get()
+            ->sum(function ($video) {
+                return DurationConverter::convertToSecond($video->content_details->duration);
+            });
 
         $remaing_duration_sec = $totat_duration_sec - $completed_duration_sec;
 
@@ -81,9 +74,10 @@ class ShowPlaylistController extends Controller
     {
         if ($playlistCount > 99) {
             return 'w-7 me-1.5';
-        } else if ($playlistCount > 9) {
+        } elseif ($playlistCount > 9) {
             return 'w-5 me-2';
         }
+
         return 'w-2 me-2.5';
     }
 }
