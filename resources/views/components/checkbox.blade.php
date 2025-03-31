@@ -44,7 +44,7 @@ $iconSize = $iconSizes[$size] ?? $iconSizes['medium'];
 <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 data-[disabled=true]:[&>[data-main-checkbox-label]]:opacity-50 data-[disabled=true]:[&>[data-checkbox-description]]:opacity-50"
     data-custom-checkbox data-disabled={{ $disabled ? 'true' : 'false' }}>
     <input type="checkbox" id="{{ $id }}" name="{{ $name ?? '' }}" @disabled($disabled)
-        @checked($checked) {{ $attributes->merge(['class' => 'hidden peer']) }}>
+        @checked($checked) {{ $attributes->merge(['class' => 'sr-only peer']) }}>
 
     <label tabindex="0" data-checkbox-label for="{{ $id }}"
         class="{{ $disabledLabelClasses }} dark:text-zinc-400 dark:peer-checked:text-zinc-300 peer-checked:text-zinc-800
