@@ -25,10 +25,8 @@ class GetPlaylistVideoController extends Controller
             // Paginate videos (10 per page)
             $videos = $playlist->videos()->paginate(10);
 
-            $positionWidth = $this->getPositionWidth($playlist->video_count);
-
             // Render the Blade view into an HTML snippet
-            $htmlView = view('playlists.video-card', compact('videos', 'positionWidth', 'playlist'))->render();
+            $htmlView = view('playlists.video-card', compact('videos', 'playlist'))->render();
 
             // Build a custom response structure
             $response = [
@@ -59,21 +57,5 @@ class GetPlaylistVideoController extends Controller
                 'error' => 'Something went wrong. Please check the logs.'
             ], 500);
         }
-    }
-
-    /**
-     * Gets the width of the video position container based on the playlist size.
-     *
-     * @param  int  $videoCount
-     * @return string
-     */
-    private function getPositionWidth(int $playlistCount): string
-    {
-        if ($playlistCount > 99) {
-            return 'w-7 me-1.5';
-        } else if ($playlistCount > 9) {
-            return 'w-5 me-2';
-        }
-        return 'w-2 me-2.5';
     }
 }

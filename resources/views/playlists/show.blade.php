@@ -193,12 +193,7 @@
                 <div id="playlist-videos" data-playlist-id="{{ $playlist->playlist_id }}"
                     data-videos-loaded="{{ $playlist->video_count > 10 ? 'false' : 'true' }}"
                     class="max-w-4xl mx-auto yt-lg:max-w-full">
-
-                    @include('playlists.video-card', [
-                        'video' => $videos,
-                        'positionWidth' => $positionWidth,
-                    ])
-
+                    @include('playlists.video-card', compact('videos'))
                 </div>
                 <div class="p-2 flex justify-center" id="playlist-loading-spinner" style="display: none;">
                     <svg class="text-zinc-300 dark:text-zinc-600 animate-spin" viewBox="0 0 64 64" fill="none"
