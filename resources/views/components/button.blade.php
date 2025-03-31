@@ -144,13 +144,11 @@
 @endphp
 
 @if ($href)
-    <a href="{{ $href }}" class="w-fit">
-@endif
-
-<button @disabled($disabled) {{ $attributes->merge(['class' => $btnClasses]) }}>
-    {{ $slot }}
-</button>
-
-@if ($href)
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $btnClasses]) }}>
+        {{ $slot }}
     </a>
+@else
+    <button @disabled($disabled) {{ $attributes->merge(['class' => $btnClasses]) }}>
+        {{ $slot }}
+    </button>
 @endif
