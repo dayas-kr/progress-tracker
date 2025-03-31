@@ -4,23 +4,56 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use App\Models\Playlist;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UpdateVideoTimeController extends Controller
 {
+    /**
+     * Update the progress of a video in a playlist.
+     */
     public function __invoke(Request $request)
     {
-        $playlist_id = $request->input('list');
-        $video_id = $request->input('v');
-        $time = $request->input('t');
+        // Validate request inputs
+        $request->validate([
+            'list' => 'required|string',
+            'v'    => 'required|string',
+            't'    => 'required|numeric|min:0',
+        ]);
 
-        $playlist = \App\Models\Playlist::where('playlist_id', $playlist_id)->first();
+        try {
+            $playlist = Playlist::where('playlist_id', $request->input('list'))->first();
 
-        if (!$playlist) {
-            return response()->json(['error' => 'Playlist not found'], 404);
+            if (!$playlist) {
+                throw new ModelNotFoundException('Playlist not found.');
+            }
+
+            $video = $playlist->videos()->where('video_id', $request->input('v'))->first();
+
+            if (!$video) {
+                throw new ModelNotFoundException('Video not found in the playlist.');
+            }
+
+            $video->update(['progress' => $request->input('t')]);
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Video progress updated successfully.',
+            ], Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            Log::error('Error updating video progress: ' . $e->getMessage());
+
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'An error occurred while updating video progress.',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $playlist->videos()->where('video_id', $video_id)->update(['progress' => $time]);
-
-        return response()->json(['success' => true]);
     }
 }

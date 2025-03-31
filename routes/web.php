@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/playlists', StorePlaylistController::class);
     Route::get('/api/playlists', GetPlaylistController::class);
     Route::get('/api/playlist/{playlist:playlist_id}/videos', GetPlaylistVideoController::class);
+
     // update the time for videos
     Route::post('/api/update-time', UpdateVideoTimeController::class);
 
