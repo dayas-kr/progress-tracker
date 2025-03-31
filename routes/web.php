@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\VideoProgressController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\UpdateVideoTimeController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
+use App\Http\Controllers\Api\VideoSessionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,26 +28,30 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Playlists Routes
 Route::middleware('auth')->group(function () {
-    // Playlists API Routes
-    Route::get('/api/playlists/info', GetPlaylistInfoController::class);
-    Route::post('/api/playlists', StorePlaylistController::class);
-    Route::get('/api/playlists', GetPlaylistController::class);
-    Route::get('/api/playlist/{playlist:playlist_id}/videos', GetPlaylistVideoController::class);
-
-    // update the time for videos
-    Route::post('/api/update-time', UpdateVideoTimeController::class);
-
-    // Video Progress API Routes
-    Route::post('/api/videos/complete', [VideoProgressController::class, 'complete']);
-    Route::post('/api/videos/reset', [VideoProgressController::class, 'reset']);
-
-    // Playlists Routes
     Route::get('/playlists', IndexPlaylistController::class)->name('playlists.index');
     Route::resource('/playlists', PlaylistController::class)->only('create');
     Route::get('/playlist', ShowPlaylistController::class)->name('playlists.show');
     Route::get('/watch', ShowVideoController::class)->name('videos.show');
     Route::delete('/playlist/{playlist:playlist_id}', [PlaylistController::class, 'destroy'])->name('playlists.destroy');
+});
+
+// API Routes
+Route::middleware('auth')->prefix('api')->group(function () {
+    Route::get('/playlists/info', GetPlaylistInfoController::class);
+    Route::post('/playlists', StorePlaylistController::class);
+    Route::get('/playlists', GetPlaylistController::class);
+    Route::get('/playlist/{playlist:playlist_id}/videos', GetPlaylistVideoController::class);
+
+    // update the time for videos
+    Route::post('/update-time', UpdateVideoTimeController::class);
+
+    // Video Progress
+    Route::post('/videos/complete', [VideoProgressController::class, 'complete']);
+    Route::post('/videos/reset', [VideoProgressController::class, 'reset']);
+
+    Route::post('/video-playback-options', VideoSessionController::class)->name('video-playback-options');
 });
 
 require __DIR__ . '/auth.php';
