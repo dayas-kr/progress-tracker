@@ -13,6 +13,9 @@ class ShowVideoController extends Controller
      */
     public function __invoke(Request $request)
     {
+        // Retrieve session settings
+        $video_options = $this->getSessionSettings();
+
         $videoId = $request->input('v');
         $youtubePlaylistId = $request->input('list');
 
@@ -30,7 +33,7 @@ class ShowVideoController extends Controller
 
         $nextVideo = $playlist->videos()->where('position', $index + 1)->first();
 
-        return view('videos.show', compact('video', 'playlist', 'index', 'completed', 'start_time', 'nextVideo'));
+        return view('videos.show', compact('video', 'playlist', 'index', 'completed', 'start_time', 'nextVideo', 'video_options'));
     }
 
     /**
@@ -67,10 +70,37 @@ class ShowVideoController extends Controller
      */
     private function calculateStartTime(Video $video): int
     {
-        // Check if progress is less than 30 seconds and at least 30 seconds remain.
-        if ($video->progress < 30 && ($video->duration_in_seconds - $video->progress) >= 30) {
+        // if ($video->is_completed) return 0;
+        // // Check if progress is less than 30 seconds and at least 30 seconds remain.
+        // if ($video->progress < 30 && ($video->duration_in_seconds - $video->progress) > 30) {
+        //     return 0;
+        // }
+        // return (int) $video->progress;
+        if ($video->is_completed) return 0;
+
+        // Calculate progress and remaining percentages.
+        $progressPercent = ($video->progress / $video->duration_in_seconds) * 100;
+        $remainingPercent = ((($video->duration_in_seconds - $video->progress) / $video->duration_in_seconds) * 100);
+
+        // Check if progress is less than 30% and at least 30% remains.
+        if ($progressPercent < 30 && $remainingPercent > 30) {
             return 0;
         }
-        return (int) $video->progress;
+
+        return (int) $progressPercent;
+    }
+
+    /**
+     * Retrieve session settings with default values.
+     */
+    private function getSessionSettings(): object
+    {
+        $auto_play = session()->get('auto_play', true);
+        $auto_complete = session()->get('auto_complete', true);
+
+        return (object)[
+            'autoplay'     => (bool)$auto_play,
+            'auto_complete' => (bool)$auto_complete,
+        ];
     }
 }

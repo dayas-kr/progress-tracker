@@ -8,8 +8,10 @@
             <div class="max-w-[1705px] mx-auto w-full flex flex-col lg:flex-row gap-5 px-3.5 lg:px-0">
                 <!-- Video and Details Section -->
                 <div id="player-container" class="flex-1 flex relative flex-col lg:h-[calc(100vh-(56px+40px))]">
-                    <div id="player" data-time={{ $video->progress ?? 0 }} data-list="{{ $playlist->playlist_id }}"
+                    <div id="player" data-time={{ $start_time }} data-list="{{ $playlist->playlist_id }}"
                         data-video-id="{{ $video->video_id }}"
+                        data-completed="{{ $video->is_completed ? 'true' : 'false' }}"
+                        data-video-options="{{ json_encode($video_options) }}"
                         class="relative w-full h-auto aspect-video bg-zinc-200 overflow-hidden dark:bg-zinc-800 rounded-xl">
                         <!-- YouTube player will be injected here -->
                     </div>
@@ -53,9 +55,8 @@
                                         class="fa-solid text-green-600 {{ $video->is_completed ? '' : 'display-none' }} dark:text-green-500 fa-circle-check checked-icon text-[1.005rem]"></i>
                                     <span>Mark{{ $video->is_completed ? 'ed' : '' }} as completed</span>
                                 </x-button>
-                                <x-button title="Options" icon data-dialog-target="video-option-dialog" radius="full"
-                                    variant="outline">
-                                    <i class="fa-solid fa-ellipsis"></i>
+                                <x-button data-dialog-target="video-option-dialog" radius="full" variant="outline">
+                                    Options
                                 </x-button>
                             </div>
                         </div>
@@ -67,7 +68,7 @@
                     <!-- Playlist Video Header -->
                     <div class="h-16 bg-zinc-50 border-b dark:border-zinc-700 dark:bg-zinc-900 py-2 pl-6 pr-2.5">
                         <a href="{{ env('APP_URL') }}/playlist?list={{ $playlist->playlist_id }}"
-                            class="block text-lg font-bold pr-2.5 text-zinc-800 dark:text-zinc-50 truncate">
+                            class="block text-lg font-bold w-fit pr-2.5 text-zinc-800 dark:text-zinc-50 truncate">
                             {{ $playlist->title }}
                         </a>
                         <div class="text-[13px] text-zinc-800 dark:text-zinc-400">
@@ -105,8 +106,8 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center relative z-20">
-                                    <x-checkbox data-video-progress-checkbox id="checkbox-{{ $_video->video_id }}"
-                                        size="small" :checked="$_video->is_completed" />
+                                    <x-checkbox class="checkbox" id="checkbox-{{ $_video->video_id }}" size="small"
+                                        :checked="$_video->is_completed" data-video-id="{{ $_video->video_id }}" />
                                 </div>
                                 <a href="{{ env('APP_URL') }}/watch?v={{ $_video->video_id }}&list={{ $playlist->playlist_id }}&index={{ $_video->position + 1 }}"
                                     class="absolute inset-0">
@@ -131,16 +132,17 @@
                 Customize your video settings and behavior below.
             </p>
             <div class="space-y-4">
-                <x-checkbox checked label="Automatically Mark as Completed"
+                <x-checkbox :checked="$video_options->auto_complete" id="auto_complete" name="auto_complete"
+                    label="Automatically Mark as Completed"
                     description="The video will be marked as completed once it has been fully played." />
-                <x-checkbox checked label="Auto Play" description="Plays the next video automatically." />
-
-                <x-checkbox label="Loop Video" description="The video will repeat when it ends." />
+                <x-checkbox :checked="$video_options->autoplay" id="autoplay" name="autoplay" label="Auto Play"
+                    description="Plays the next video automatically." />
+                {{-- <x-checkbox label="Loop Video" description="The video will repeat when it ends." /> --}}
             </div>
-
             <div class="mt-5 flex justify-end gap-2.5">
                 <x-button radius="full" data-dialog-cancel class="w-fit" variant="secondary">Cancel</x-button>
-                <x-button radius="full" data-dialog-confirm class="w-fit">Save Changes</x-button>
+                <x-button id="video-options-submit" radius="full" data-dialog-confirm class="w-fit">Save
+                    Changes</x-button>
             </div>
         </div>
     </div>
