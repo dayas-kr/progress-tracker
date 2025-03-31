@@ -8,12 +8,11 @@
             <div class="max-w-[1705px] mx-auto w-full flex flex-col lg:flex-row gap-5 px-3.5 lg:px-0">
                 <!-- Video and Details Section -->
                 <div id="player-container" class="flex-1 flex relative flex-col lg:h-[calc(100vh-(56px+40px))]">
-                    <div
+                    <div id="player" data-time={{ $video->progress ?? 0 }} data-list="{{ $playlist->playlist_id }}"
+                        data-video-id="{{ $video->video_id }}"
                         class="relative w-full h-auto aspect-video bg-zinc-200 overflow-hidden dark:bg-zinc-800 rounded-xl">
-                        <div class="w-full h-full" id="player" data-time={{ $start_time }}
-                            data-list="{{ $playlist->playlist_id }}" data-video-id="{{ $video->video_id }}"></div>
+                        <!-- YouTube player will be injected here -->
                     </div>
-
 
                     <div class="py-2.5 space-y-3">
                         <div class="text-xl font-bold text-zinc-800 dark:text-zinc-50">
