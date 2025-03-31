@@ -8,6 +8,7 @@ const startTime = parseInt(playerElement.data("time") || "0", 10);
 const VideoOptions = playerElement.data("video-options");
 const autoplayCheckbx = $("#autoplay");
 const autoCompleteCheckbx = $("#auto_complete");
+const loopPlaylistCheckbox = $("#loop_playlist");
 const videoContainer = $("#video-list-container");
 let isComplete = playerElement.data("completed");
 
@@ -29,12 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
             data: {
                 autoplay: autoplayCheckbx.prop("checked"),
                 auto_complete: autoCompleteCheckbx.prop("checked"),
+                loop_playlist: loopPlaylistCheckbox.prop("checked"),
             },
             success: function (response) {
                 console.log(response);
                 if (response.status === "success") {
                     VideoOptions.autoplay = response.autoplay;
                     VideoOptions.auto_complete = response.auto_complete;
+                    VideoOptions.loop_playlist = response.loop_playlist;
                 }
             },
             error: function (xhr, status, error) {
@@ -109,7 +112,15 @@ function onVideoComplete() {
         const index = NextVideo.data("index");
         redirectToNextVideo(videoId, index, playlistId);
     } else {
-        console.log("No more videos");
+        // console.log("No more videos");
+        if (VideoOptions.loop_playlist) {
+            const firstVideoCard = videoContainer
+                .find("[data-video-card]")
+                .first();
+            const firstVideoId = firstVideoCard.data("video-id");
+
+            redirectToNextVideo(firstVideoId, 1, playlistId);
+        }
     }
 }
 

@@ -137,12 +137,14 @@
                     description="The video will be marked as completed once it has been fully played." />
                 <x-checkbox :checked="$video_options->autoplay" id="autoplay" name="autoplay" label="Auto Play"
                     description="Plays the next video automatically." />
-                {{-- <x-checkbox label="Loop Video" description="The video will repeat when it ends." /> --}}
+                <x-checkbox :checked="$video_options->loop_playlist" id="loop_playlist" name="loop_playlist" label="Loop Video"
+                    description="The video will repeat when it ends." />
             </div>
             <div class="mt-5 flex justify-end gap-2.5">
                 <x-button radius="full" data-dialog-cancel class="w-fit" variant="secondary">Cancel</x-button>
-                <x-button id="video-options-submit" radius="full" data-dialog-confirm class="w-fit">Save
-                    Changes</x-button>
+                <x-button id="video-options-submit" radius="full" data-dialog-confirm class="w-fit">
+                    Save Changes
+                </x-button>
             </div>
         </div>
     </div>

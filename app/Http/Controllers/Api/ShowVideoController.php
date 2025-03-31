@@ -97,10 +97,12 @@ class ShowVideoController extends Controller
     {
         $auto_play = session()->get('auto_play', true);
         $auto_complete = session()->get('auto_complete', true);
+        $loop_playlist = session()->get('loop_playlist', true);
 
         return (object)[
-            'autoplay'     => (bool)$auto_play,
-            'auto_complete' => (bool)$auto_complete,
+            'autoplay'     => (bool) $auto_play,
+            'auto_complete' => (bool) $auto_complete,
+            'loop_playlist' => (bool) $loop_playlist
         ];
     }
 }

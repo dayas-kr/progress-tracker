@@ -23,12 +23,17 @@ class VideoSessionController extends Controller
                 session()->put('auto_complete', $request->boolean('auto_complete'));
             }
 
+            if ($request->has('loop_playlist')) {
+                session()->put('loop_playlist', $request->boolean('loop_playlist'));
+            }
+
             // Retrieve updated session values
             return response()->json([
                 'status'        => 'success',
                 'message'       => 'Session settings updated successfully.',
                 'autoplay'     => session()->get('auto_play'),
                 'auto_complete' => session()->get('auto_complete'),
+                'loop_playlist' => session()->get('loop_playlist'),
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
             Log::error('Error updating session settings: ' . $e->getMessage());
