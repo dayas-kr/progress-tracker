@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlaylistController;
-use App\Http\Controllers\Api\VideoResetController;
+use App\Http\Controllers\Api\ShowVideoController;
 use App\Http\Controllers\Api\GetPlaylistController;
 use App\Http\Controllers\Api\ShowPlaylistController;
 use App\Http\Controllers\Api\IndexPlaylistController;
@@ -12,9 +11,7 @@ use App\Http\Controllers\Api\StorePlaylistController;
 use App\Http\Controllers\Api\VideoProgressController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\UpdateVideoTimeController;
-use App\Http\Controllers\Api\VideoCompletionController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
-use App\Http\Controllers\Api\ToggleVideoCompletionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/playlists', IndexPlaylistController::class)->name('playlists.index');
     Route::resource('/playlists', PlaylistController::class)->only('create');
     Route::get('/playlist', ShowPlaylistController::class)->name('playlists.show');
-    Route::get('/watch', [VideoController::class, 'show'])->name('videos.show');
+    Route::get('/watch', ShowVideoController::class)->name('videos.show');
     Route::delete('/playlist/{playlist:playlist_id}', [PlaylistController::class, 'destroy'])->name('playlists.destroy');
 });
 
