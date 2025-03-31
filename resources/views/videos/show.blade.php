@@ -77,10 +77,10 @@
                         </div>
                     </div>
                     <!-- Video List -->
-                    <div id="playlist-videos-container" class="flex-1 overflow-y-auto custom-scrollbar"
-                        id="playlist-videos">
+                    <div id="video-list-container" class="flex-1 overflow-y-auto custom-scrollbar">
                         @foreach ($playlist->videos as $_video)
                             <div data-video-card data-video-id="{{ $_video->video_id }}"
+                                data-index="{{ $_video->position + 1 }}"
                                 class="grid grid-cols-[1rem_auto_1fr_auto] gap-x-2 relative py-2 pl-2 pr-1 items-center {{ $_video->video_id === $video->video_id ? 'bg-blue-100 dark:bg-blue-900/25' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
                                 <div class="text-sm text-zinc-600 dark:text-zinc-400 text-right pr-1">
                                     {{ $_video->position + 1 }}
@@ -98,7 +98,7 @@
                                 <div class="pl-1 h-full">
                                     <div class="space-y-1">
                                         <div
-                                            class="text-sm font-medium w-full line-clamp-2 text-zinc-800 dark:text-zinc-100">
+                                            class="text-sm font-medium video-title w-full line-clamp-2 text-zinc-800 dark:text-zinc-100">
                                             {{ $_video->title }}</div>
                                         <div class="text-xs line-clamp-1 text-zinc-600 dark:text-zinc-400">
                                             {{ $_video->channel->channelTitle }}

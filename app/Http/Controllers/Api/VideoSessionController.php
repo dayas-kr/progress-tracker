@@ -28,7 +28,7 @@ class VideoSessionController extends Controller
                 'status'        => 'success',
                 'message'       => 'Session settings updated successfully.',
                 'autoplay'     => session()->get('auto_play'),
-                'autoComplete' => session()->get('auto_complete'),
+                'auto_complete' => session()->get('auto_complete'),
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
             Log::error('Error updating session settings: ' . $e->getMessage());
