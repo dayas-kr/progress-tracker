@@ -67,4 +67,5 @@
                 </button>
             </div>
         </div>
+    </div>
 </header>
