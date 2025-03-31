@@ -1,5 +1,6 @@
 import "./bootstrap";
 import Alpine from "alpinejs";
+import $ from "jquery";
 
 window.Alpine = Alpine;
 Alpine.start();
@@ -13,6 +14,12 @@ import { initAlertDialogs } from "./ui/alertDialog";
 
 // Initialize all UI components on page load.
 document.addEventListener("DOMContentLoaded", () => {
+    // Set the CSRF token for all AJAX requests
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    });
     initCustomInputs();
     initDropdowns(document);
     initSelects(document);
