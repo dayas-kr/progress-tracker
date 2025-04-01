@@ -122,12 +122,11 @@ function onVideoComplete() {
         }
     }
 }
-~(
-    // --- HELPER FUNCTIONS ---
-    function redirectToNextVideo(videoId, index, playlistId) {
-        window.location.href = `/watch?v=${videoId}&list=${playlistId}&index=${index}`;
-    }
-);
+
+// --- HELPER FUNCTIONS ---
+function redirectToNextVideo(videoId, index, playlistId) {
+    window.location.href = `/watch?v=${videoId}&list=${playlistId}&index=${index}`;
+}
 
 function updateVideoOptions() {
     $.ajax({
@@ -156,9 +155,7 @@ function markAsCompleted(videoId = globalVideoId) {
     $.ajax({
         url: "/api/videos/complete",
         method: "POST",
-        data: {
-            v: videoId,
-        },
+        data: { v: videoId },
         success: function (response) {
             console.log(response);
             if (response.status === "success") {
@@ -175,9 +172,7 @@ function resetProgress(videoId = globalVideoId) {
     $.ajax({
         url: "/api/videos/reset",
         method: "POST",
-        data: {
-            v: videoId,
-        },
+        data: { v: videoId },
         success: function (response) {
             console.log(response);
             if (response.status === "success") {
