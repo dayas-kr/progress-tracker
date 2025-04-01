@@ -8,7 +8,7 @@
 
     <title>
         @if (isset($title))
-            {{ $title }}
+            {!! $title !!}
         @else
             {{ config('app.name', 'Laravel') }}
         @endif
