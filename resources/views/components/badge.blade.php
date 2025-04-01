@@ -30,7 +30,6 @@
     };
 @endphp
 
-<div
-    {{ $attributes->merge(['class' => collect(['badge w-fit rounded-full font-medium flex items-center select-none', $sizeClasses, $variantClasses])->join(' ')]) }}>
+<div {{ $attributes->merge(['class' => collect(['badge', $sizeClasses, $variantClasses])->join(' ')]) }}>
     {{ $slot }}
 </div>
