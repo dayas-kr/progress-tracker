@@ -6,7 +6,7 @@
                 src="{{ $playlist->images->high->url }}" alt="{{ $playlist->title }}">
             <div
                 class="absolute bottom-2 right-2 text-white text-[13px] px-[5px] py-[1px] font-semibold rounded bg-black/80">
-                {{ $playlist->total_duration ?? '00:00' }}
+                {{ $playlist->duration ?? '00:00' }}
             </div>
         </div>
         <div class="p-5 pt-4 flex flex-col flex-1">
