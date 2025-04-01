@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Playlist;
+use App\Helpers\NumFormatter;
 use App\Helpers\DurationConverter;
 use App\Helpers\Traits\ConvertsJson;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +36,11 @@ class Video extends Model
     public function getDurationAttribute()
     {
         return DurationConverter::convertYouTubeDuration($this->content_details->duration);
+    }
+
+    public function getViewCountAttribute()
+    {
+        return NumFormatter::format($this->statistics->viewCount);
     }
 
     /**

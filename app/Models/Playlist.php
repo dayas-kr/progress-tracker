@@ -47,7 +47,7 @@ class Playlist extends Model
         return DurationConverter::convertSecondsToYouTubeDuration($averageDurationSec);
     }
 
-    public function getRemaingDurationAttribute()
+    public function getRemainingDurationAttribute()
     {
         $completedDurationSec = $this->videos()->sum('progress');
         $remainingDurationSec = $this->total_duration - $completedDurationSec;
