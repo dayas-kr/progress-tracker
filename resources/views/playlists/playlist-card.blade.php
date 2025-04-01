@@ -19,7 +19,7 @@
                     </span>
                     @if ($playlist->playlist_progress == 100)
                         <span class="text-sm text-green-700 dark:text-green-500">
-                            completed <i class="fa-solid ms-0.5 fa-circle-check"></i>
+                            <i class="fa-solid me-0.5 fa-circle-check"></i> completed
                         </span>
                     @else
                         <span data-progress="{{ $playlist->playlist_progress }}"
