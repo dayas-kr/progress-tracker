@@ -260,7 +260,7 @@
             <div class="mt-4 flex justify-end gap-2">
                 <x-button data-dialog-cancel class="w-fit" variant="secondary">Cancel</x-button>
                 <x-button data-dialog-confirm id="reset-progress-confirm"
-                    data-playlist-id="{{ $playlist->playlist_id }}" class="w-fit">
+                    data-reseted="{{ $playlist->progress === 0 ? 'true' : 'false' }}" class="w-fit">
                     Reset Progress
                 </x-button>
             </div>

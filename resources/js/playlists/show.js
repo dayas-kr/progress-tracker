@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     resetProgressBtn.on("click", () => {
-        if (isPlaylistCompleted()) {
+        if (!isPlaylistReseted()) {
             resetPlaylistProgress(playlistId);
         }
     });
@@ -176,6 +176,7 @@ function markPlaylistComplete(playlistId) {
             console.log(response);
             if (response.status === "success") {
                 markCompleteBtn.data("completed", true);
+                resetProgressBtn.data("reseted", false);
                 $("#completed-count").text(totalVideoCount);
                 $("#progress").text("100%");
                 $("#remaing-duration").text("0:00");
@@ -203,6 +204,7 @@ function resetPlaylistProgress(playlistId) {
             if (response.status === "success") {
                 console.log(response);
                 markCompleteBtn.data("completed", false);
+                resetProgressBtn.data("reseted", true);
                 $("#completed-count").text("0");
                 $("#progress").text("0%");
                 $("#remaing-duration").text($("#total-duration").text());
@@ -233,4 +235,8 @@ function createCompletedBadge() {
 
 function isPlaylistCompleted() {
     return markCompleteBtn.data("completed");
+}
+
+function isPlaylistReseted() {
+    return resetProgressBtn.data("reseted");
 }
