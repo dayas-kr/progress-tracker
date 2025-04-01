@@ -83,6 +83,9 @@ function handleTimeUpdate(currentTime) {
 
 // Send current video time to the server if the video isn't complete
 function sendTimeUpdate(time = Math.floor(player?.getCurrentTime() || 0)) {
+    if (isCurrentVideoMarked()) {
+        return; // Skip updating time if video is already marked as complete
+    }
     const data = {
         list: playlistId,
         v: globalVideoId,
@@ -119,11 +122,12 @@ function onVideoComplete() {
         }
     }
 }
-
-// --- HELPER FUNCTIONS ---
-function redirectToNextVideo(videoId, index, playlistId) {
-    window.location.href = `/watch?v=${videoId}&list=${playlistId}&index=${index}`;
-}
+~(
+    // --- HELPER FUNCTIONS ---
+    function redirectToNextVideo(videoId, index, playlistId) {
+        window.location.href = `/watch?v=${videoId}&list=${playlistId}&index=${index}`;
+    }
+);
 
 function updateVideoOptions() {
     $.ajax({
@@ -212,10 +216,10 @@ function updateUI(videoId, isCompleted) {
             .text(isCompleted ? "Marked as completed" : "Mark as completed");
     }
 
-    // Update the video element checkbox in sidebar
+    // Update the video element checkbox in sidebar using .prop() instead of .attr()
     videoContainer
         .find(`[data-video-id="${videoId}"]`)
-        .attr("checked", isCompleted);
+        .prop("checked", isCompleted);
 }
 
 function isCurrentVideoMarked() {
