@@ -96,6 +96,11 @@ function sendTimeUpdate(time = Math.floor(player?.getCurrentTime() || 0)) {
 
 // Handle video completion
 function onVideoComplete() {
+    // Send a final update using the full video duration to ensure 100% progress
+    if (player && player.getDuration) {
+        sendTimeUpdate(Math.floor(player.getDuration()));
+    }
+
     const NextVideo = videoContainer
         .find(`[data-video-id="${globalVideoId}"]`)
         .next("[data-video-card]");
@@ -105,13 +110,11 @@ function onVideoComplete() {
         const index = NextVideo.data("index");
         redirectToNextVideo(videoId, index, playlistId);
     } else {
-        // console.log("No more videos");
         if (VideoOptions.loop_playlist) {
             const firstVideoCard = videoContainer
                 .find("[data-video-card]")
                 .first();
             const firstVideoId = firstVideoCard.data("video-id");
-
             redirectToNextVideo(firstVideoId, 1, playlistId);
         }
     }
