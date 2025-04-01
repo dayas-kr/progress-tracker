@@ -48,7 +48,7 @@
                 <span class="hidden sm:inline-block">{{ $video->published_at->diffForHumans() }}</span>
             </div>
             @if ($video->is_completed)
-                <x-badge size="md" variant="green-subtle">
+                <x-badge size="md" variant="green-subtle" class="completed-badge">
                     <i class="fa-regular fa-circle-check"></i><span class="hidden sm:inline">Completed</span>
                 </x-badge>
             @endif
@@ -61,11 +61,13 @@
                 </x-button>
             </x-slot>
             <x-slot name="content">
-                <x-dropdown-item data-video-id="{{ $video->video_id }}" data-watch-later title="Mark as Broken" />
-                <x-dropdown-item data-video-id="{{ $video->video_id }}" data-mark-completed
+                <x-dropdown-item disabled data-video-id="{{ $video->video_id }}" data-watch-later
+                    title="Mark as Broken" />
+                <x-dropdown-item disabled data-video-id="{{ $video->video_id }}" data-mark-completed
                     title="Mark as completed" />
-                <x-dropdown-item data-video-id="{{ $video->video_id }}" data-video-title="{{ $video->title }}"
-                    data-video-progress-reset data-dialog-target="video-progress-reset-dialog" title="Reset progress" />
+                <x-dropdown-item disabled data-video-id="{{ $video->video_id }}"
+                    data-video-title="{{ $video->title }}" data-video-progress-reset
+                    data-dialog-target="video-progress-reset-dialog" title="Reset progress" />
             </x-slot>
         </x-dropdown>
     </div>
