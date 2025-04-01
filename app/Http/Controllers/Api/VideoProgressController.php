@@ -74,6 +74,7 @@ class VideoProgressController extends Controller
         // Validate the request input
         $request->validate([
             'v' => 'required|string',
+            'advancedInfo' => 'nullable'
         ]);
 
         try {
@@ -86,6 +87,20 @@ class VideoProgressController extends Controller
 
             // Update the associated playlist progress if applicable
             $this->updatePlaylistProgress($video);
+
+            if ($request->boolean('advancedInfo') === true) {
+                $playlist = $video->playlist;
+
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'Video progress reset successfully.',
+                    'data'    => [
+                        'progress'            => $playlist->playlist_progress,
+                        'remainingDuration'   => $playlist->remaining_duration,
+                        'completedVideoCount' => $playlist->completed_video_count,
+                    ],
+                ]);
+            }
 
             return response()->json([
                 'status' => 'success',
