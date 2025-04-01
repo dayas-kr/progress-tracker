@@ -12,6 +12,7 @@ const videoContainer = $("#video-list-container");
 const videoOtionsSubmitBtn = $("#video-options-submit");
 const markCompletedBtn = $("#mark-completed");
 const resetProgressBtn = $("#reset-progress");
+const checkboxInput = $(".video-progress-checkbox");
 
 let player;
 let lastSentTime = -1;
@@ -32,6 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resetProgressBtn.on("click", () => {
         if (isCurrentVideoMarked()) resetProgress();
+    });
+
+    checkboxInput.on("change", (event) => {
+        handleCheckboxChange($(event.target));
     });
 });
 
@@ -78,15 +83,15 @@ function handleTimeUpdate(currentTime) {
 
 // Send current video time to the server if the video isn't complete
 function sendTimeUpdate(time = Math.floor(player?.getCurrentTime() || 0)) {
-    if (!isCurrentVideoMarked()) {
-        $.post("/api/update-time", {
-            list: playlistId,
-            v: globalVideoId,
-            t: time,
-        })
-            .done((response) => console.log(response))
-            .fail((error) => console.error("Error updating time:", error));
-    }
+    const data = {
+        list: playlistId,
+        v: globalVideoId,
+        t: time,
+    };
+
+    $.post("/api/update-time", data)
+        .done((response) => console.log(response))
+        .fail((error) => console.error("Error updating time:", error));
 }
 
 // Handle video completion
@@ -176,6 +181,14 @@ function resetProgress(videoId = globalVideoId) {
             console.log("Error:", error);
         },
     });
+}
+
+// handle checkbox change
+function handleCheckboxChange(checkbox) {
+    const videoId = checkbox.data("video-id");
+    const isCompleted = checkbox.prop("checked");
+    if (isCompleted) markAsCompleted(videoId);
+    else resetProgress(videoId);
 }
 
 // Common function to update UI for both markAsCompleted and resetProgress

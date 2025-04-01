@@ -105,8 +105,8 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center relative z-20">
-                                    <x-checkbox data-video-id="{{ $_video->video_id }}" size="small"
-                                        :checked="$_video->is_completed" data-video-id="{{ $_video->video_id }}" />
+                                    <x-checkbox class="video-progress-checkbox" data-video-id="{{ $_video->video_id }}"
+                                        size="small" :checked="$_video->is_completed" data-video-id="{{ $_video->video_id }}" />
                                 </div>
                                 <a href="{{ env('APP_URL') }}/watch?v={{ $_video->video_id }}&list={{ $playlist->playlist_id }}&index={{ $_video->position + 1 }}"
                                     class="absolute inset-0">
