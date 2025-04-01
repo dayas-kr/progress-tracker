@@ -36,11 +36,11 @@
             </a>
         </div>
 
-        <div class="space-y-2 pl-1 video-info h-full">
+        <div class="space-y-1 pl-1 video-info h-full">
             <h3 class="font-medium line-clamp-2 text-zinc-900 dark:text-zinc-100">
                 <a href="https://youtu.be/{{ $video->video_id }}" target="_blank">{{ $video->title }}</a>
             </h3>
-            <div class="flex items-center text-xs font-normal gap-x-1.5 text-zinc-500 dark:text-zinc-400">
+            <div class="flex items-center text-xs gap-x-1.5 text-zinc-500 dark:text-zinc-400">
                 <span class="font-medium">{{ $video->channel->channelTitle }}</span>
                 <span class="hidden sm:inline-block">•</span>
                 <span class="hidden sm:inline-block">
