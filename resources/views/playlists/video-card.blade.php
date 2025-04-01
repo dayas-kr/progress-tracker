@@ -43,7 +43,9 @@
             <div class="flex items-center text-xs font-normal gap-x-1.5 text-zinc-500 dark:text-zinc-400">
                 <span class="font-medium">{{ $video->channel->channelTitle }}</span>
                 <span class="hidden sm:inline-block">•</span>
-                <span class="hidden sm:inline-block">{{ $video->statistics->viewCount }} views</span>
+                <span class="hidden sm:inline-block">
+                    <span class="uppercase">{{ $video->view_count }}</span> views
+                </span>
                 <span class="hidden sm:inline-block">•</span>
                 <span class="hidden sm:inline-block">{{ $video->published_at->diffForHumans() }}</span>
             </div>
@@ -63,10 +65,11 @@
             <x-slot name="content">
                 <x-dropdown-item disabled data-video-id="{{ $video->video_id }}" data-watch-later
                     title="Mark as Broken" />
-                <x-dropdown-item disabled data-video-id="{{ $video->video_id }}" data-mark-completed
-                    title="Mark as completed" />
-                <x-dropdown-item disabled data-video-id="{{ $video->video_id }}"
-                    data-video-title="{{ $video->title }}" data-video-progress-reset
+                <x-dropdown-item data-marked="{{ $video->is_completed ? 'true' : 'false' }}"
+                    data-video-id="{{ $video->video_id }}" data-mark-completed title="Mark as completed" />
+                <x-dropdown-item
+                    data-reseted="{{ !$video->is_completed && $video->progress === 0 ? 'true' : 'false' }}"
+                    data-reset-progress data-video-id="{{ $video->video_id }}" data-video-title="{{ $video->title }}"
                     data-dialog-target="video-progress-reset-dialog" title="Reset progress" />
             </x-slot>
         </x-dropdown>
