@@ -8,11 +8,13 @@ import {
 } from "../utils/session";
 
 const csrfToken = $('meta[name="csrf-token"]').attr("content");
-const playlistVideoContainer = $("#playlist-videos");
 const playlistVideosWrapper = $("#playlist-videos-container");
 const totalVideoCount = playlistVideosWrapper.attr("data-video-count");
+const playlistVideoContainer = $("#playlist-videos");
 const playlistId = playlistVideoContainer.attr("data-playlist-id");
-const deletePlaylistBtn = $("#delete-playlist-confirm");
+const deletePlaylistBtn = $("#delete-confirm");
+const markCompleteBtn = $("#mark-completed");
+const resetProgressBtn = $("#reset-progress-confirm");
 const alertContainer = $("#alert-container");
 
 let currentPage = 1;
@@ -26,8 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
     deletePlaylistBtn.on("click", () => {
         deletePlaylist(playlistId);
     });
+
+    markCompleteBtn.on("click", () => {
+        if (!isPlaylistCompleted()) {
+            markPlaylistComplete(playlistId);
+        }
+    });
+
+    resetProgressBtn.on("click", () => {
+        if (isPlaylistCompleted()) {
+            resetPlaylistProgress(playlistId);
+        }
+    });
 });
-// delete-playlist-confirm
 
 // functioon for infinite scroll
 function listenForScrollEnd() {
@@ -152,4 +165,72 @@ function handleRedirectMessage() {
 function redirectToIndexPage(message) {
     setItemWithExpiration("playlistMessage_index", message, 15);
     window.location.href = `${window.location.origin}/playlists`;
+}
+
+function markPlaylistComplete(playlistId) {
+    $.ajax({
+        url: "/api/playlists/complete",
+        type: "POST",
+        data: { list: playlistId },
+        success: function (response) {
+            console.log(response);
+            if (response.status === "success") {
+                markCompleteBtn.data("completed", true);
+                $("#completed-count").text(totalVideoCount);
+                $("#progress").text("100%");
+                $("#remaing-duration").text("0:00");
+                playlistVideoContainer.find(".video-info").each(function () {
+                    if ($(this).find(".completed-badge").length === 0) {
+                        $(this).append(createCompletedBadge());
+                    }
+                });
+            } else {
+                //
+            }
+        },
+        error: function (response) {
+            console.log(response);
+        },
+    });
+}
+
+function resetPlaylistProgress(playlistId) {
+    $.ajax({
+        url: "/api/playlists/reset",
+        type: "POST",
+        data: { list: playlistId },
+        success: function (response) {
+            if (response.status === "success") {
+                console.log(response);
+                markCompleteBtn.data("completed", false);
+                $("#completed-count").text("0");
+                $("#progress").text("0%");
+                $("#remaing-duration").text($("#total-duration").text());
+                setTimeout(function () {
+                    playlistVideoContainer
+                        .find(".video-info")
+                        .each(function () {
+                            $(this).find(".completed-badge").remove();
+                        });
+                }, 100); // Adjust delay as needed
+            } else {
+                //
+            }
+        },
+        error: function (response) {
+            console.log(response);
+        },
+    });
+}
+
+function createCompletedBadge() {
+    return $("<div>", {
+        class: "badge px-2 h-6 text-xs gap-1.5 green-subtle completed-badge",
+    })
+        .append($("<i>", { class: "fa-regular fa-circle-check" }))
+        .append($("<span>", { class: "hidden sm:inline", text: "Completed" }));
+}
+
+function isPlaylistCompleted() {
+    return markCompleteBtn.data("completed");
 }

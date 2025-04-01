@@ -130,8 +130,10 @@
                                             <i class="fa-solid fa-circle-check text-[1.025rem]"></i>
                                         </x-slot>
                                     </x-dropdown-item>
-                                    <x-dropdown-item title="Mark as completed" id="mark-playlist-as-completed" />
-                                    <x-dropdown-item data-dialog-target="progress-reset-dialog"
+                                    <x-dropdown-item
+                                        data-completed="{{ $playlist->progress === $playlist->total_duration ? 'true' : 'false' }}"
+                                        title="Mark as completed" id="mark-completed" />
+                                    <x-dropdown-item data-dialog-target="playlist-progress-reset-dialog"
                                         title="Reset progress" />
                                     <x-dropdown-item disabled title="Re-fetch" />
                                     <x-dropdown-item title="Edit" />
@@ -148,14 +150,16 @@
                         <div
                             class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-r border-b yt-lg:border-b-0 dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Progress</span>
-                            <span class="text-lg font-bold  text-green-600 dark:text-green-500">
+                            <span id="progress" class="text-lg font-bold  text-green-600 dark:text-green-500">
                                 {{ $playlist->playlist_progress }}%
                             </span>
                         </div>
                         <div class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-0 border-x border-b dark:border-zinc-800">
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">Videos</span>
                             <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">
-                                {{ $playlist->completed_video_count }} / {{ $playlist->video_count }}
+                                <span id="completed-count">{{ $playlist->completed_video_count }}</span>
+                                <span> / </span>
+                                <span id="total-count">{{ $playlist->video_count }}</span>
                             </span>
                         </div>
                         <div
@@ -163,7 +167,7 @@
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">
                                 Total duration
                             </span>
-                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">
+                            <span id="total-duration" class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">
                                 {{ $playlist->duration }}
                             </span>
                         </div>
@@ -180,7 +184,7 @@
                             <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400">
                                 Remaining duration
                             </span>
-                            <span class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">
+                            <span id="remaing-duration" class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">
                                 {{ $playlist->remaing_duration }}
                             </span>
                         </div>
@@ -234,9 +238,31 @@
             </p>
             <div class="mt-4 flex justify-end gap-2">
                 <x-button data-dialog-cancel class="w-fit" variant="secondary">Cancel</x-button>
-                <x-button data-dialog-confirm id="delete-playlist-confirm"
-                    data-playlist-id="{{ $playlist->playlist_id }}" variant="destructive"
-                    class="w-fit">Delete</x-button>
+                <x-button data-dialog-confirm id="delete-confirm" data-playlist-id="{{ $playlist->playlist_id }}"
+                    variant="destructive" class="w-fit">
+                    Delete
+                </x-button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Dialog for Progress Reset for Playlist -->
+    <div id="playlist-progress-reset-dialog" data-dialog-backdrop
+        class="fixed inset-0 bg-zinc-900/50 dark:bg-black/60 z-[1000] flex items-center justify-center px-5 sm:px-0"
+        style="display: none;">
+        <div data-dialog-content
+            class="w-full max-w-lg p-6 border border-white dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-xl"
+            aria-modal="true" tabindex="0">
+            <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">Reset progress</h3>
+            <p class="mt-2 text-sm text-zinc-800 dark:text-zinc-200">
+                Are you sure? This will reset all videos and clear your progress.
+            </p>
+            <div class="mt-4 flex justify-end gap-2">
+                <x-button data-dialog-cancel class="w-fit" variant="secondary">Cancel</x-button>
+                <x-button data-dialog-confirm id="reset-progress-confirm"
+                    data-playlist-id="{{ $playlist->playlist_id }}" class="w-fit">
+                    Reset Progress
+                </x-button>
             </div>
         </div>
     </div>

@@ -6,13 +6,14 @@ use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\Api\ShowVideoController;
 use App\Http\Controllers\Api\GetPlaylistController;
 use App\Http\Controllers\Api\ShowPlaylistController;
+use App\Http\Controllers\Api\VideoSessionController;
 use App\Http\Controllers\Api\IndexPlaylistController;
 use App\Http\Controllers\Api\StorePlaylistController;
 use App\Http\Controllers\Api\VideoProgressController;
 use App\Http\Controllers\Api\GetPlaylistInfoController;
 use App\Http\Controllers\Api\UpdateVideoTimeController;
 use App\Http\Controllers\Api\GetPlaylistVideoController;
-use App\Http\Controllers\Api\VideoSessionController;
+use App\Http\Controllers\Api\PlaylistProgressController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,6 +52,11 @@ Route::middleware('auth')->prefix('api')->group(function () {
     Route::post('/videos/complete', [VideoProgressController::class, 'complete']);
     Route::post('/videos/reset', [VideoProgressController::class, 'reset']);
 
+    // Playlist Progress
+    Route::post('/playlists/complete', [PlaylistProgressController::class, 'complete']);
+    Route::post('/playlists/reset', [PlaylistProgressController::class, 'reset']);
+
+    // Video Playback Options
     Route::post('/video-playback-options', VideoSessionController::class)->name('video-playback-options');
 });
 
