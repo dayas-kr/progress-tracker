@@ -40,6 +40,18 @@ document.addEventListener("DOMContentLoaded", () => {
             resetPlaylistProgress(playlistId);
         }
     });
+
+    playlistVideoContainer.on("click", "[data-mark-completed]", function () {
+        if (!isVideoCompleted($(this))) {
+            markVideoAsCompleted($(this).data("video-id"), $(this));
+        }
+    });
+
+    playlistVideoContainer.on("click", "[data-reset-progress]", function () {
+        if (!isVideoReseted($(this))) {
+            resetVideoProgress($(this).data("video-id"), $(this));
+        }
+    });
 });
 
 // functioon for infinite scroll
@@ -239,4 +251,62 @@ function isPlaylistCompleted() {
 
 function isPlaylistReseted() {
     return resetProgressBtn.data("reseted");
+}
+
+function markVideoAsCompleted(videoId, SelectItem) {
+    $.ajax({
+        url: "/api/videos/complete",
+        method: "POST",
+        data: { v: videoId, advancedInfo: true },
+        success: function (response) {
+            console.log(response);
+            if (response.status === "success") {
+                SelectItem.data("marked", true);
+                SelectItem.next("[data-reset-progress]").data("reseted", false);
+                const videCard = $(
+                    `[data-video-card][data-video-id="${videoId}"]`
+                );
+                videCard.find(".video-info").append(createCompletedBadge());
+                $("#completed-count").text(response.data.completedVideoCount);
+                $("#progress").text(response.data.progress + "%");
+                $("#remaing-duration").text(response.data.remainingDuration);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Error:", error);
+        },
+    });
+}
+
+function resetVideoProgress(videoId, SelectItem) {
+    $.ajax({
+        url: "/api/videos/reset",
+        method: "POST",
+        data: { v: videoId, advancedInfo: true },
+        success: function (response) {
+            console.log(response);
+            if (response.status === "success") {
+                SelectItem.data("reseted", true);
+                SelectItem.prev("[data-mark-completed]").data("marked", false);
+                const videCard = $(
+                    `[data-video-card][data-video-id="${videoId}"]`
+                );
+                videCard.find(".video-info").find(".completed-badge").remove();
+                $("#completed-count").text(response.data.completedVideoCount);
+                $("#progress").text(response.data.progress + "%");
+                $("#remaing-duration").text(response.data.remainingDuration);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Error:", error);
+        },
+    });
+}
+
+function isVideoCompleted(element) {
+    return element.data("marked");
+}
+
+function isVideoReseted(element) {
+    return element.data("reseted");
 }

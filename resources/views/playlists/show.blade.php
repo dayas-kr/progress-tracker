@@ -185,7 +185,7 @@
                                 Remaining duration
                             </span>
                             <span id="remaing-duration" class="text-lg font-bold  text-zinc-700 dark:text-zinc-200">
-                                {{ $playlist->remaing_duration }}
+                                {{ $playlist->remaining_duration }}
                             </span>
                         </div>
                         <div class="yt-lg:px-4 px-3.5 py-2 yt-lg:border-0 dark:border-zinc-800">
