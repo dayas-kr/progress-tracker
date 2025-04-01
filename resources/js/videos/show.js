@@ -1,5 +1,4 @@
 import $ from "jquery";
-import { setItemWithExpiration } from "../utils/session";
 
 const playerElement = $("#player");
 const globalVideoId = playerElement.data("video-id");
@@ -10,7 +9,9 @@ const autoplayCheckbx = $("#autoplay");
 const autoCompleteCheckbx = $("#auto_complete");
 const loopPlaylistCheckbox = $("#loop_playlist");
 const videoContainer = $("#video-list-container");
-let isComplete = playerElement.data("completed");
+const videoOtionsSubmitBtn = $("#video-options-submit");
+const markCompletedBtn = $("#mark-completed");
+const resetProgressBtn = $("#reset-progress");
 
 let player;
 let lastSentTime = -1;
@@ -23,27 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
     autoplayCheckbx.prop("checked", VideoOptions.autoplay);
     autoCompleteCheckbx.prop("checked", VideoOptions.auto_complete);
 
-    $("#video-options-submit").on("click", function (e) {
-        $.ajax({
-            url: "/api/video-playback-options",
-            method: "POST",
-            data: {
-                autoplay: autoplayCheckbx.prop("checked"),
-                auto_complete: autoCompleteCheckbx.prop("checked"),
-                loop_playlist: loopPlaylistCheckbox.prop("checked"),
-            },
-            success: function (response) {
-                console.log(response);
-                if (response.status === "success") {
-                    VideoOptions.autoplay = response.autoplay;
-                    VideoOptions.auto_complete = response.auto_complete;
-                    VideoOptions.loop_playlist = response.loop_playlist;
-                }
-            },
-            error: function (xhr, status, error) {
-                console.log("Error:", error);
-            },
-        });
+    videoOtionsSubmitBtn.on("click", updateVideoOptions);
+
+    markCompletedBtn.on("click", () => {
+        if (!isCurrentVideoMarked()) markAsCompleted();
+    });
+
+    resetProgressBtn.on("click", () => {
+        if (isCurrentVideoMarked()) resetProgress();
     });
 });
 
@@ -83,15 +71,14 @@ function handleStateChange(event) {
     else if (event.data === YT.PlayerState.ENDED) onVideoComplete();
 }
 
-// Save current time in session storage and send update every 10 seconds
+// Send time updates every 10 seconds
 function handleTimeUpdate(currentTime) {
-    setItemWithExpiration(`videoTime_${globalVideoId}`, currentTime, 3600);
     if (currentTime % 10 === 0) sendTimeUpdate(currentTime);
 }
 
 // Send current video time to the server if the video isn't complete
 function sendTimeUpdate(time = Math.floor(player?.getCurrentTime() || 0)) {
-    if (!isComplete) {
+    if (!isCurrentVideoMarked()) {
         $.post("/api/update-time", {
             list: playlistId,
             v: globalVideoId,
@@ -102,6 +89,7 @@ function sendTimeUpdate(time = Math.floor(player?.getCurrentTime() || 0)) {
     }
 }
 
+// Handle video completion
 function onVideoComplete() {
     const NextVideo = videoContainer
         .find(`[data-video-id="${globalVideoId}"]`)
@@ -124,6 +112,96 @@ function onVideoComplete() {
     }
 }
 
+// --- HELPER FUNCTIONS ---
 function redirectToNextVideo(videoId, index, playlistId) {
     window.location.href = `/watch?v=${videoId}&list=${playlistId}&index=${index}`;
+}
+
+function updateVideoOptions() {
+    $.ajax({
+        url: "/api/video-playback-options",
+        method: "POST",
+        data: {
+            autoplay: autoplayCheckbx.prop("checked"),
+            auto_complete: autoCompleteCheckbx.prop("checked"),
+            loop_playlist: loopPlaylistCheckbox.prop("checked"),
+        },
+        success: function (response) {
+            console.log(response);
+            if (response.status === "success") {
+                VideoOptions.autoplay = response.autoplay;
+                VideoOptions.auto_complete = response.auto_complete;
+                VideoOptions.loop_playlist = response.loop_playlist;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Error:", error);
+        },
+    });
+}
+
+function markAsCompleted(videoId = globalVideoId) {
+    $.ajax({
+        url: "/api/videos/complete",
+        method: "POST",
+        data: {
+            v: videoId,
+        },
+        success: function (response) {
+            console.log(response);
+            if (response.status === "success") {
+                updateUI(videoId, true); // Mark video as completed
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Error:", error);
+        },
+    });
+}
+
+function resetProgress(videoId = globalVideoId) {
+    $.ajax({
+        url: "/api/videos/reset",
+        method: "POST",
+        data: {
+            v: videoId,
+        },
+        success: function (response) {
+            console.log(response);
+            if (response.status === "success") {
+                updateUI(videoId, false); // Reset progress
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log("Error:", error);
+        },
+    });
+}
+
+// Common function to update UI for both markAsCompleted and resetProgress
+function updateUI(videoId, isCompleted) {
+    const isCurrentVideo = videoId === globalVideoId;
+
+    if (isCurrentVideo) {
+        // Update markCompletedBtn state
+        markCompletedBtn.data("completed", isCompleted);
+        markCompletedBtn
+            .find(".check-icon")
+            .toggleClass("display-none", isCompleted);
+        markCompletedBtn
+            .find(".checked-icon")
+            .toggleClass("display-none", !isCompleted);
+        markCompletedBtn
+            .find("span")
+            .text(isCompleted ? "Marked as completed" : "Mark as completed");
+    }
+
+    // Update the video element checkbox in sidebar
+    videoContainer
+        .find(`[data-video-id="${videoId}"]`)
+        .attr("checked", isCompleted);
+}
+
+function isCurrentVideoMarked() {
+    return markCompletedBtn.data("completed");
 }

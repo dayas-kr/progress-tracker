@@ -41,14 +41,13 @@
                             </div>
 
                             <div class="flex gap-2.5">
-                                <x-button id="reset-progress" radius="full" variant="outline"
-                                    data-video-completed="{{ $video->is_completed ? 'true' : 'false' }}">
+                                <x-button id="reset-progress" radius="full" variant="outline">
                                     <i class="fa-solid reset-icon fa-rotate-left text-[0.9rem]"></i>
                                     <span>Reset progress</span>
                                 </x-button>
+
                                 <x-button id="mark-completed" radius="full" variant="outline"
-                                    data-video-completed="{{ $video->is_completed ? 'true' : 'false' }}">
-                                    <x-loading-spinner class="animate-spin size-4 spinner-icon hidden" />
+                                    data-completed="{{ $video->is_completed ? 'true' : 'false' }}">
                                     <i
                                         class="fa-regular fa-circle-check {{ $video->is_completed ? 'display-none' : '' }} check-icon text-[1.005rem]"></i>
                                     <i
@@ -106,7 +105,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center relative z-20">
-                                    <x-checkbox class="checkbox" id="checkbox-{{ $_video->video_id }}" size="small"
+                                    <x-checkbox data-video-id="{{ $_video->video_id }}" size="small"
                                         :checked="$_video->is_completed" data-video-id="{{ $_video->video_id }}" />
                                 </div>
                                 <a href="{{ env('APP_URL') }}/watch?v={{ $_video->video_id }}&list={{ $playlist->playlist_id }}&index={{ $_video->position + 1 }}"
