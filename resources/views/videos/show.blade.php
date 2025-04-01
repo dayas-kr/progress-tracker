@@ -90,8 +90,7 @@
                                         src="{{ $_video->thumbnails->medium->url }}" alt="Thumbnail">
                                     <div
                                         class="video-duration-container absolute bottom-1 right-1 text-white text-xs px-[5px] py-[1px] font-semibold rounded bg-black/80">
-                                        <span
-                                            class="video-duration">{{ \App\Helpers\DurationConverter::convertYouTubeDuration($video->content_details->duration) }}</span>
+                                        <span class="video-duration">{{ $video->duration }}</span>
                                     </div>
                                 </div>
                                 <div class="pl-1 h-full">

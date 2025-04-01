@@ -25,8 +25,7 @@
 
             <div
                 class="video-duration-container absolute bottom-2 right-1 text-white text-[13px] px-[5px] py-[1px] font-semibold rounded bg-black/80">
-                <span
-                    class="video-duration">{{ \App\Helpers\DurationConverter::convertYouTubeDuration($video->content_details->duration) }}</span>
+                <span class="video-duration">{{ $video->duration }}</span>
                 <!-- Dynamically show "Now playing" -->
                 <span class="video-now-playing hidden">Now playing</span>
             </div>

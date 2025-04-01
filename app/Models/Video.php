@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Playlist;
+use App\Helpers\DurationConverter;
 use App\Helpers\Traits\ConvertsJson;
+use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
 {
@@ -28,6 +30,11 @@ class Video extends Model
     public function playlist()
     {
         return $this->belongsTo(Playlist::class);
+    }
+
+    public function getDurationAttribute()
+    {
+        return DurationConverter::convertYouTubeDuration($this->content_details->duration);
     }
 
     /**
