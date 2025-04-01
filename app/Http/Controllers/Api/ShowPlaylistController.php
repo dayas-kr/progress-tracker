@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Playlist;
 use Illuminate\Http\Request;
-use App\Helpers\PlaylistStats;
-use App\Helpers\DurationConverter;
 use App\Http\Controllers\Controller;
 
 class ShowPlaylistController extends Controller
@@ -21,9 +19,8 @@ class ShowPlaylistController extends Controller
 
         $videos = $playlist->videos()->paginate(10);
         $positionWidth = $this->getPositionWidth($playlist->video_count);
-        $playlist_stats = PlaylistStats::getStats($playlist);
 
-        return view('playlists.show', compact('playlist', 'videos', 'positionWidth', 'playlist_stats'));
+        return view('playlists.show', compact('playlist', 'videos', 'positionWidth'));
     }
 
     private function getPositionWidth(int $playlistCount): string

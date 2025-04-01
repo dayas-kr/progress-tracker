@@ -40,6 +40,31 @@ class Playlist extends Model
         return DurationConverter::convertSecondsToYouTubeDuration($this->total_duration);
     }
 
+    public function getAverageDurationAttribute()
+    {
+        $averageDurationSec = $this->video_count > 0 ? round($this->total_duration / $this->video_count) : 0;
+
+        return DurationConverter::convertSecondsToYouTubeDuration($averageDurationSec);
+    }
+
+    public function getRemaingDurationAttribute()
+    {
+        $completedDurationSec = $this->videos()->sum('progress');
+        $remainingDurationSec = $this->total_duration - $completedDurationSec;
+        return DurationConverter::convertSecondsToYouTubeDuration($remainingDurationSec);
+    }
+
+    public function getPlaylistProgressAttribute()
+    {
+        $completedDurationSec = $this->videos()->sum('progress');
+        return $this->total_duration > 0 ? round(($completedDurationSec * 100) / $this->total_duration) : 0;
+    }
+
+    public function getCompletedVideoCountAttribute()
+    {
+        return $this->videos()->where('is_completed', true)->count();
+    }
+
     /**
      * Convert JSON to object.
      */
