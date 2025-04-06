@@ -99,9 +99,12 @@ function sendTimeUpdate(time = Math.floor(player?.getCurrentTime() || 0)) {
 
 // Handle video completion
 function onVideoComplete() {
-    // Send a final update using the full video duration to ensure 100% progress
-    if (player && player.getDuration) {
-        sendTimeUpdate(Math.floor(player.getDuration()));
+    // Send time update and mark video as complete if auto_complete is enabled
+    if (VideoOptions.auto_complete) {
+        if (player && player.getDuration) {
+            sendTimeUpdate(Math.floor(player.getDuration()));
+        }
+        markAsCompleted();
     }
 
     const NextVideo = videoContainer
