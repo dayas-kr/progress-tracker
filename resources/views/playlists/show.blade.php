@@ -114,7 +114,8 @@
                         @endif
 
                         <div class="flex justify-between gap-3">
-                            <x-button radius="full" class="font-semibold w-full h-9">
+                            <x-button href="{{ env('APP_URL') }}/watch?list={{ $playlist->playlist_id }}&play_all=1"
+                                radius="full" class="font-semibold w-full h-9">
                                 <x-gmdi-play-arrow class="size-6 me-0.5" /><span>Play All</span>
                             </x-button>
                             <!-- Dropdown -->

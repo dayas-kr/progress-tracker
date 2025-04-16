@@ -19,6 +19,7 @@ let lastSentTime = -1;
 
 // Initialize functions when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
+    removePlayAllQuery();
     initializeYouTubePlayer(); // Setup the YouTube player
 
     // Set checkboxes based on VideoOptions values
@@ -222,4 +223,10 @@ function updateUI(videoId, isCompleted) {
 
 function isCurrentVideoMarked() {
     return markCompletedBtn.data("completed");
+}
+
+function removePlayAllQuery() {
+    const u = new URL(location);
+    u.searchParams.delete("play_all");
+    history.replaceState({}, "", u);
 }

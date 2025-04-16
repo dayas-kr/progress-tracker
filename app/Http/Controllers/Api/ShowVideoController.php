@@ -18,9 +18,10 @@ class ShowVideoController extends Controller
 
         $videoId = $request->input('v');
         $youtubePlaylistId = $request->input('list');
+        $playAll = (bool) $request->input('play_all') ?? false;
 
         // Retrieve the video using a dedicated method.
-        $video = $this->getVideo($videoId, $youtubePlaylistId);
+        $video = $this->getVideo($videoId, $youtubePlaylistId, $playAll);
 
         if (!$video) abort(404);
 
@@ -39,12 +40,20 @@ class ShowVideoController extends Controller
     /**
      * Retrieve video based on video id and playlist id.
      */
-    private function getVideo(string $videoId, string $youtubePlaylistId): ?Video
+    private function getVideo(?string $videoId, string $youtubePlaylistId, bool $playAll): ?Video
     {
+        if (!$playAll && !$videoId) abort(404);
+
+        if ($playAll) {
+            return \App\Models\Playlist::where('playlist_id', $youtubePlaylistId)
+                ->first()?->videos()
+                ->where('is_completed', false)
+                ->orderBy('position')
+                ->first();
+        }
+
         return Video::where('video_id', $videoId)
-            ->whereHas('playlist', function ($query) use ($youtubePlaylistId) {
-                $query->where('playlist_id', $youtubePlaylistId);
-            })
+            ->whereHas('playlist', fn($q) => $q->where('playlist_id', $youtubePlaylistId))
             ->first();
     }
 
