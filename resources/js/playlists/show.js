@@ -16,6 +16,7 @@ const deletePlaylistBtn = $("#delete-confirm");
 const markCompleteBtn = $("#mark-completed");
 const resetProgressBtn = $("#reset-progress-confirm");
 const alertContainer = $("#alert-container");
+const searchInput = $("#search-input");
 
 let currentPage = 1;
 let isLoading = false;
@@ -50,6 +51,27 @@ document.addEventListener("DOMContentLoaded", () => {
     playlistVideoContainer.on("click", "[data-reset-progress]", function () {
         if (!isVideoReseted($(this))) {
             resetVideoProgress($(this).data("video-id"), $(this));
+        }
+    });
+
+    // Search Playlists
+    document.addEventListener("keydown", (e) => {
+        // CMD+K to focus the input
+        if (e.key === "k" && e.metaKey) {
+            searchInput.trigger("focus");
+        }
+
+        // Escape to clear the input if it's focused
+        if (e.key === "Escape" && document.activeElement === searchInput[0]) {
+            searchInput.val("");
+        }
+
+        // Enter key to search (only if input is focused)
+        if (e.key === "Enter" && document.activeElement === searchInput[0]) {
+            const val = searchInput.val();
+            if (val && val.length >= 3) {
+                // TODO: Search for playlist
+            }
         }
     });
 });

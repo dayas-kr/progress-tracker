@@ -5,6 +5,7 @@ import { getItemWithExpiration, deleteSessionItem } from "../utils/session";
 const csrfToken = $('meta[name="csrf-token"]').attr("content");
 const playlistGrid = $("#playlists-grid");
 const alertContainer = $("#alert-container");
+const searchInput = $("#search-input");
 
 let currentPage = 1;
 let isLoading = false;
@@ -12,6 +13,27 @@ let isLoading = false;
 document.addEventListener("DOMContentLoaded", () => {
     handleRedirectMessage();
     listenForScrollEnd();
+
+    // Search Playlists
+    document.addEventListener("keydown", (e) => {
+        // CMD+K to focus the input
+        if (e.key === "k" && e.metaKey) {
+            searchInput.trigger("focus");
+        }
+
+        // Escape to clear the input if it's focused
+        if (e.key === "Escape" && document.activeElement === searchInput[0]) {
+            searchInput.val("");
+        }
+
+        // Enter key to search (only if input is focused)
+        if (e.key === "Enter" && document.activeElement === searchInput[0]) {
+            const val = searchInput.val();
+            if (val && val.length >= 3) {
+                // TODO: Search for playlist
+            }
+        }
+    });
 });
 
 function listenForScrollEnd() {

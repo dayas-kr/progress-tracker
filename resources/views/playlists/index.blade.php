@@ -8,7 +8,7 @@
                 <div class="relative max-w-lg w-full">
                     <x-input-group>
                         <x-gmdi-search data-slot="icon" />
-                        <x-input size="small" placeholder="Search for a playlist" class="w-full" />
+                        <x-input id="search-input" size="small" placeholder="Search for a playlist" class="w-full" />
                     </x-input-group>
                     <x-cmdk-kbd class="absolute right-2 top-2" />
                 </div>

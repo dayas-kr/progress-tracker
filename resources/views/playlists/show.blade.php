@@ -15,7 +15,7 @@
             <div class="relative hidden md:block md:max-w-md lg:max-w-lg w-full z-10">
                 <x-input-group class="max-w-lg w-full">
                     <x-gmdi-search data-slot="icon" />
-                    <x-input size="small" autocomplete="off" icon id="search" :prefixStyling="false"
+                    <x-input size="small" autocomplete="off" icon id="search-input" :prefixStyling="false"
                         prefix='gmdi-search' placeholder="Search Videos"
                         class="pr-14 w-full bg-white dark:bg-transparent" />
                 </x-input-group>

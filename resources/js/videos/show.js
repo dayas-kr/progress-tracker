@@ -13,6 +13,7 @@ const videoOtionsSubmitBtn = $("#video-options-submit");
 const markCompletedBtn = $("#mark-completed");
 const resetProgressBtn = $("#reset-progress");
 const checkboxInput = $(".video-progress-checkbox");
+const searchInput = $("#search-input");
 
 let player;
 let lastSentTime = -1;
@@ -38,6 +39,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     checkboxInput.on("change", (event) => {
         handleCheckboxChange($(event.target));
+    });
+
+    // Search Playlists
+    document.addEventListener("keydown", (e) => {
+        // CMD+K to focus the input
+        if (e.key === "k" && e.metaKey) {
+            searchInput.trigger("focus");
+        }
+
+        // Escape to clear the input if it's focused
+        if (e.key === "Escape" && document.activeElement === searchInput[0]) {
+            searchInput.val("");
+        }
+
+        // Enter key to search (only if input is focused)
+        if (e.key === "Enter" && document.activeElement === searchInput[0]) {
+            const val = searchInput.val();
+            if (val && val.length >= 3) {
+                // TODO: Search for playlist
+            }
+        }
     });
 });
 
