@@ -126,14 +126,16 @@
                                     </x-button>
                                 </x-slot>
                                 <x-slot name="content">
-                                    <x-dropdown-item title="Save to watch later">
-                                        <x-slot name="suffix">
-                                            <i class="fa-solid fa-circle-check text-[1.025rem]"></i>
-                                        </x-slot>
-                                    </x-dropdown-item>
+                                    <x-dropdown-item title="Save to watch later" />
                                     <x-dropdown-item
                                         data-completed="{{ $playlist->progress === $playlist->total_duration ? 'true' : 'false' }}"
-                                        title="Mark as completed" id="mark-completed" />
+                                        title="Mark as completed" id="mark-completed">
+                                        @if ($playlist->progress === $playlist->total_duration)
+                                            <x-slot name="suffix">
+                                                <i class="fa-solid fa-circle-check text-[1.025rem]"></i>
+                                            </x-slot>
+                                        @endif
+                                    </x-dropdown-item>
                                     <x-dropdown-item data-dialog-target="playlist-progress-reset-dialog"
                                         title="Reset progress" />
                                     <x-dropdown-item disabled title="Re-fetch" />

@@ -197,6 +197,10 @@ function markPlaylistComplete(playlistId) {
                         $(this).append(createCompletedBadge());
                     }
                 });
+
+                markCompleteBtn
+                    .find(".flex.justify-between")
+                    .append(createCompletedIcon());
             } else {
                 //
             }
@@ -227,6 +231,7 @@ function resetPlaylistProgress(playlistId) {
                             $(this).find(".completed-badge").remove();
                         });
                 }, 100); // Adjust delay as needed
+                markCompleteBtn.find("i").remove();
             } else {
                 //
             }
@@ -270,6 +275,14 @@ function markVideoAsCompleted(videoId, SelectItem) {
                 $("#completed-count").text(response.data.completedVideoCount);
                 $("#progress").text(response.data.progress + "%");
                 $("#remaing-duration").text(response.data.remainingDuration);
+
+                if (response.data.progress === 100) {
+                    markCompleteBtn.data("completed", true);
+                    resetProgressBtn.data("reseted", false);
+                    markCompleteBtn
+                        .find(".flex.justify-between")
+                        .append(createCompletedIcon());
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -295,6 +308,8 @@ function resetVideoProgress(videoId, SelectItem) {
                 $("#completed-count").text(response.data.completedVideoCount);
                 $("#progress").text(response.data.progress + "%");
                 $("#remaing-duration").text(response.data.remainingDuration);
+                markCompleteBtn.find("i").remove();
+                markCompleteBtn.data("completed", false);
             }
         },
         error: function (xhr, status, error) {
@@ -309,4 +324,10 @@ function isVideoCompleted(element) {
 
 function isVideoReseted(element) {
     return element.data("reseted");
+}
+
+function createCompletedIcon() {
+    return $("<i>", {
+        class: "fa-solid fa-circle-check text-[1.025rem]",
+    });
 }

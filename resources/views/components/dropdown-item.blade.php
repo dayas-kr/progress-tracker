@@ -41,7 +41,7 @@
                 <span>{{ $title ?? $slot }}</span>
             </div>
             @isset($suffix)
-                <div>{{ $suffix }}</div>
+                {{ $suffix }}
             @endisset
         </div>
     </button>
