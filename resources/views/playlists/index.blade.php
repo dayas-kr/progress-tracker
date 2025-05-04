@@ -5,10 +5,13 @@
         <div class="max-w-7xl px-4 mx-auto sm:px-6 lg:px-8">
             <div class="flex gap-3 items-center justify-between">
                 <!-- Search -->
-                <x-input-group class="max-w-lg w-full">
-                    <x-gmdi-search data-slot="icon" />
-                    <x-input size="small" placeholder="Search for a playlist" class="w-full" />
-                </x-input-group>
+                <div class="relative max-w-lg w-full">
+                    <x-input-group>
+                        <x-gmdi-search data-slot="icon" />
+                        <x-input size="small" placeholder="Search for a playlist" class="w-full" />
+                    </x-input-group>
+                    <x-cmdk-kbd class="absolute right-2 top-2" />
+                </div>
 
                 <!-- Create (link) -->
                 <x-button href="{{ route('playlists.create') }}" style="height: 36px;">

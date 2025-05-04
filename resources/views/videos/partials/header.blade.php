@@ -17,6 +17,7 @@
             <x-input size="small" autocomplete="off" icon id="search" :prefixStyling="false" prefix='gmdi-search'
                 placeholder="Search Videos" class="w-full bg-white dark:bg-transparent" />
         </x-input-group>
+        <x-cmdk-kbd class="absolute right-2 top-2" />
     </div>
 
     <div class="flex items-center justify-between gap-1 sm:gap-4">
