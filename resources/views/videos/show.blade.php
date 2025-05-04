@@ -65,9 +65,10 @@
                 <div
                     class="lg:max-w-[400px] w-full border dark:border-zinc-700 rounded-xl h-fit flex flex-col max-h-[50vh] sm:max-h-[calc(100vh-(56px+40px))] overflow-hidden pb-1">
                     <!-- Playlist Video Header -->
-                    <div class="h-16 bg-zinc-50 border-b dark:border-zinc-700 dark:bg-zinc-900 py-2 pl-6 pr-2.5">
+                    <div
+                        class="h-16 bg-zinc-50 border-b dark:border-zinc-700 dark:bg-zinc-900 py-2 pl-6 pr-2.5 truncate">
                         <a href="{{ env('APP_URL') }}/playlist?list={{ $playlist->playlist_id }}"
-                            class="block text-lg font-bold w-fit pr-2.5 text-zinc-800 dark:text-zinc-50 truncate">
+                            class="text-lg font-bold w-fit pr-2.5 text-zinc-800 dark:text-zinc-50 truncate">
                             {{ $playlist->title }}
                         </a>
                         <div class="text-[13px] text-zinc-800 dark:text-zinc-400">
@@ -76,7 +77,8 @@
                         </div>
                     </div>
                     <!-- Video List -->
-                    <div id="video-list-container" class="flex-1 overflow-y-auto custom-scrollbar">
+                    <div id="video-list-container"
+                        class="flex-1 overflow-y-auto custom-scrollbar scrollbar-extra-small">
                         @foreach ($playlist->videos as $_video)
                             <div data-video-card data-video-id="{{ $_video->video_id }}"
                                 data-index="{{ $_video->position + 1 }}"
@@ -146,7 +148,6 @@
             </div>
         </div>
     </div>
-
 
     <div id="alert-container" class="fixed top-4 z-[100] right-4 space-y-2 min-w-xl"></div>
 

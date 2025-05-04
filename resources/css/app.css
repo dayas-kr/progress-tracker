@@ -54,7 +54,11 @@
     @apply size-2;
 }
 .custom-scrollbar.scrollbar-extra-small::-webkit-scrollbar {
-    @apply size-2;
+    @apply size-4.5;
+}
+.custom-scrollbar.scrollbar-extra-small::-webkit-scrollbar-thumb {
+    border: 5px solid transparent;
+    background-clip: content-box;
 }
 /* custom scrollbar (end) */
 
